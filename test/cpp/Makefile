@@ -44,7 +44,7 @@ test_target: $(GTEST_OBJECTS) $(DAZCON_OBJECTS) TargetTest.o
 
 test_alngraph: $(GTEST_OBJECTS) $(PBDAGCON_OBJECTS) AlnGraphBoostTest.o
 	@echo $(BUILDMSG)
-	@$(CXX) $^ -o $@ $(LDFLAGS) $(LDLIBS)
+	@$(CXX) $^ -static -o $@ $(LDFLAGS) $(LDLIBS)
 	./$@
 
 test_alignment: $(GTEST_OBJECTS) $(PBDAGCON_OBJECTS) AlignmentTest.o
