@@ -1,5 +1,5 @@
-# A URI location for a copy of boost 1_57_0, headers only
-URI := https://www.dropbox.com/s/grryr7ttqymg2fu/boost_1_57_0.tbz2\?dl\=1 
+# A URI location for a copy of boost headers only
+URI := https://www.dropbox.com/s/g22iayi83p5gbbq/boost_1_58_0-headersonly.tbz2\?dl\=0
 # Obtain the boost URI and extract it into PWD
 GET_BOOST := curl -L $(URI) | tar xjf -
 
@@ -8,9 +8,9 @@ GET_BOOST := curl -L $(URI) | tar xjf -
 ifdef boost
 BOOST_HEADERS := $(boost)
 else
-BOOST_HEADERS := third-party/boost_1_57_0
+BOOST_HEADERS := third-party/boost_1_58_0-headersonly
 endif
 
-ifneq ($(wildcard $(PREBUILT)/boost/boost_1_55_0/*),)
-BOOST_HEADERS := $(PREBUILT)/boost/boost_1_55_0
+ifneq ($(wildcard $(PREBUILT)/boost/boost_1_58_0-headersonly/*),)
+BOOST_HEADERS := $(PREBUILT)/boost/boost_1_58_0-headersonly
 endif

@@ -41,21 +41,27 @@ GCC 4.8.1 or higher is known to work.
 For building pbdagcon, you'll need to also close and build the following 
 project: https://github.com/PacificBiosciences/blasr_libcpp
 
-### Compile/Check
+This project requires that you have boost headers available.  You can either 
+supply them yourself or the Makefile will obtain them for you from the 
+internet.
+
+### Compile/Check (pbdagcon)
     > cd <path to blasr_libcpp>
     > make -C alignment nohdf=1
     > make -C pbdata
     > export BLASR=$PWD/alignment
     > export PBDATA=$PWD/pbdata
 
-    # build pbdagcon executable
+    # build pbdagcon executable (Makefile fetches boost headers)
     > make cpp 
-    > cd src/cpp
+    # You already have boost headers
+    > make cpp boost=<path to headers>
 
     # build and run unit tests
     > make cpp-check
 
     # usage 
+    > cd src/cpp
     > ./pbdagcon --help
 
 Running
