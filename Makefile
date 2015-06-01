@@ -17,6 +17,11 @@ clean:
 test:
 	nosetests src/tests/*
 	cram examples/*.t
+
+init-submodule: 
+	git submodule init
+	$(MAKE) -C blasr_libcpp/alignment nohdf=1
+	$(MAKE) -C blasr_libcpp/pbdata
 	
 # C++ project build directives
 cpp:
