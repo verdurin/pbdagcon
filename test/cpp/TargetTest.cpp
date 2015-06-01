@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <DazAlnProvider.hpp>
 
-TEST(TargetHitTest, add_record) {
+TEST(TargetTest, add_record) {
     Record r1, r2, r3;
     Overlap o1, o2, o3;
 

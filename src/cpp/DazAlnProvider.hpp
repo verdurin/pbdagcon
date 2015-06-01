@@ -133,8 +133,9 @@ public:
     Target(HITS_DB& db, int tspace, int small);
     ~Target();
 
-    // Initializes this target based on the given record
-    void firstRecord(Record& rec);
+    // Initializes this target based on the given record, possibly scoring as
+    // a 'proper' overlap (more stringent).
+    void firstRecord(Record& rec, bool proper=false);
 
     // Adds the next overlap record to this target, possibly scoring as 
     // a 'proper' overlap (more stringent).

@@ -115,7 +115,7 @@ bool DazAlnProvider::nextTarget(std::vector<dagcon::Alignment> &dest) {
     dest.clear();
 
     // constructor initializes the first prevRec_ struct
-    trg_->firstRecord(prevRec_);
+    trg_->firstRecord(prevRec_, popts_.properOvls);
 
     std::set<int> tfilt = popts_.targets;
     unsigned int filter = tfilt.size();
@@ -137,7 +137,7 @@ bool DazAlnProvider::nextTarget(std::vector<dagcon::Alignment> &dest) {
             }
 
             if (skipTarget && covl_ != novl_) {
-                trg_->firstRecord(rec);
+                trg_->firstRecord(rec, popts_.properOvls);
                 skipTarget = false;
                 continue;
             }
@@ -276,7 +276,7 @@ Target::~Target() {
     }
 }
 
-void Target::firstRecord(Record& rec) {
+void Target::firstRecord(Record& rec, bool proper) {
     id = rec.ovl.aread;
     length = db_.reads[id].rlen;
 
@@ -292,6 +292,7 @@ void Target::firstRecord(Record& rec) {
     TargetHit hit(rec);
     hit.alen = length;
     hit.blen = db_.reads[rec.ovl.bread].rlen;
+    hit.computeOvlScore(proper);
     hits.push_back(std::move(hit));
 }
 

@@ -28,7 +28,9 @@ BUILDMSG = "=== Building $@ ==="
 
 all: check
 
-check: test_target_hit test_target test_alngraph test_alignment test_simple_aligner
+check: test_target_hit test_alngraph test_alignment test_simple_aligner
+
+# XXX: need to mock out db_ in order to run test_target
 
 test_target_hit: $(GTEST_OBJECTS) $(DAZCON_OBJECTS) TargetHitTest.o 
 	@echo $(BUILDMSG)
@@ -37,7 +39,7 @@ test_target_hit: $(GTEST_OBJECTS) $(DAZCON_OBJECTS) TargetHitTest.o
 
 test_target: $(GTEST_OBJECTS) $(DAZCON_OBJECTS) TargetTest.o
 	@echo $(BUILDMSG)
-	$(CXX) $^ -o $@ -lpthread
+	@$(CXX) $^ -o $@ -lpthread
 	./$@
 
 test_alngraph: $(GTEST_OBJECTS) $(PBDAGCON_OBJECTS) AlnGraphBoostTest.o
