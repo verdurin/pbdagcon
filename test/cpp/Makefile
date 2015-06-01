@@ -2,9 +2,10 @@
 SRCDIR := ../../src/cpp
 
 include $(SRCDIR)/pbi.mk
+include $(SRCDIR)/boost.mk
 
 CXXFLAGS := -O3 -std=c++11 $(INCDIRS) -I $(SRCDIR) \
-		    -I $(SRCDIR)/third-party/boost_1_57_0 \
+		    -I $(BOOST_HEADERS) \
 			-I third-party/gtest-1.7.0/include \
 			-I third-party/gtest-1.7.0
 
@@ -25,37 +26,43 @@ endif
 
 BUILDMSG = "=== Building $@ ==="
 
-all : check
+all: check
 
-check : test_target_hit test_target test_alngraph test_alignment test_simple_aligner
+check: test_target_hit test_target test_alngraph test_alignment test_simple_aligner
 
-test_target_hit : $(GTEST_OBJECTS) $(DAZCON_OBJECTS) TargetHitTest.o 
+test_target_hit: $(GTEST_OBJECTS) $(DAZCON_OBJECTS) TargetHitTest.o 
 	@echo $(BUILDMSG)
 	@$(CXX) $^ -o $@ -lpthread
 	./$@
 
-test_target : $(GTEST_OBJECTS) $(DAZCON_OBJECTS) TargetTest.o
+test_target: $(GTEST_OBJECTS) $(DAZCON_OBJECTS) TargetTest.o
 	@echo $(BUILDMSG)
-	@$(CXX) $^ -o $@ -lpthread
+	$(CXX) $^ -o $@ -lpthread
 	./$@
 
-test_alngraph : $(GTEST_OBJECTS) $(PBDAGCON_OBJECTS) AlnGraphBoostTest.o
+test_alngraph: $(GTEST_OBJECTS) $(PBDAGCON_OBJECTS) AlnGraphBoostTest.o
 	@echo $(BUILDMSG)
-	@$(CXX) $^ -static -o $@ $(LDFLAGS) $(LDLIBS)
+	@$(CXX) $^ -o $@ $(LDFLAGS) $(LDLIBS)
 	./$@
 
-test_alignment : $(GTEST_OBJECTS) $(PBDAGCON_OBJECTS) AlignmentTest.o
-	@echo $(BUILDMSG)
-	@$(CXX) $^ -static -o $@ $(LDFLAGS) $(LDLIBS)
-	./$@
-
-test_simple_aligner : $(GTEST_OBJECTS) $(PBDAGCON_OBJECTS) SimpleAlignerTest.o
+test_alignment: $(GTEST_OBJECTS) $(PBDAGCON_OBJECTS) AlignmentTest.o
 	@echo $(BUILDMSG)
 	@$(CXX) $^ -static -o $@ $(LDFLAGS) $(LDLIBS)
 	./$@
 
-clean :
+test_simple_aligner: $(GTEST_OBJECTS) $(PBDAGCON_OBJECTS) SimpleAlignerTest.o
+	@echo $(BUILDMSG)
+	@$(CXX) $^ -static -o $@ $(LDFLAGS) $(LDLIBS)
+	./$@
+
+$(SRCDIR)/AlnGraphBoost.o: $(BOOST_HEADERS)
+
+$(BOOST_HEADERS):
+	@echo Fetching boost headers from $(URI)
+	@cd $(SRCDIR)/third-party && $(GET_BOOST)
+
+clean:
+	$(RM) $(SRCDIR)/*.o
 	$(RM) *.o
 	$(RM) test_*
-	$(RM) *.log
 
