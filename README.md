@@ -38,22 +38,17 @@ The following are instructions on how to build the C++ pbdagcon executable.
 The code now depends on C++11 features, in particular std::thread, std::move. 
 GCC 4.8.1 or higher is known to work.
 
-For building pbdagcon, you'll need to also close and build the following 
-project: https://github.com/PacificBiosciences/blasr_libcpp
-
 This project requires that you have boost headers available.  You can either 
 supply them yourself or the Makefile will obtain them for you from the 
 internet.
 
 ### Compile/Check (pbdagcon)
-    > cd <path to blasr_libcpp>
-    > make -C alignment nohdf=1
-    > make -C pbdata
-    > export BLASR=$PWD/alignment
-    > export PBDATA=$PWD/pbdata
+    # First fetch and build the relevant portions of the blasr_libcpp
+    # submodule
+    > make init-submodule
 
     # build pbdagcon executable (Makefile fetches boost headers)
-    > make cpp 
+    > make cpp
     # You already have boost headers
     > make cpp boost=<path to headers>
 
