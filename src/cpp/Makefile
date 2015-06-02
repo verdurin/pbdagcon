@@ -31,8 +31,7 @@ pbdagcon: $(COMMON_OBJECTS) $(PBDAGCON_OBJECTS)
 $(COMMON_OBJECTS): $(BOOST_HEADERS)
 
 $(BOOST_HEADERS):
-	@echo Fetching boost headers from $(URI)
-	@cd third-party && $(GET_BOOST)
+	cd third-party && $(GET_BOOST)
 
 clean:
 	$(RM) *.d

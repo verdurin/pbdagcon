@@ -1,7 +1,7 @@
 .PHONY: all clean install dev-install test
 SHELL = /bin/bash -e
 
-all: install
+all: cpp
 
 install:
 	python setup.py install
@@ -25,7 +25,7 @@ init-submodule:
 	
 # C++ project build directives
 cpp:
-	$(MAKE) -C src/cpp
+	$(MAKE) -C src/cpp BLASR=$(PWD)/blasr_libcpp/alignment PBDATA=$(PWD)/blasr_libcpp/pbdata
 
 cpp-check: cpp
 	$(MAKE) -C test/cpp
