@@ -1,22 +1,11 @@
-.PHONY: all clean install dev-install test
+.PHONY: all clean test init-submodule cpp-github cpp cpp-check cpp-clean
 SHELL = /bin/bash -e
 
 all: cpp-github 
 
-install:
-	python setup.py install
+clean: cpp-clean
 
-dev-install:
-	python setup.py develop
-
-clean:
-	rm -rf build/;\
-	find . -name "*.egg-info" | xargs rm -rf;\
-	rm -rf dist/
-
-test:
-	nosetests src/tests/*
-	cram examples/*.t
+test: cpp-check
 
 init-submodule: 
 	git submodule init
