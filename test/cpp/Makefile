@@ -3,11 +3,15 @@ SRCDIR := ../../src/cpp
 
 include $(SRCDIR)/pbi.mk
 include $(SRCDIR)/boost.mk
+include gtest.mk
+
+GTEST_CPPFLAGS += -isystem $(GTEST_DIR)/include
+GTEST_CXXFLAGS += -g -Wall -Wextra -pthread
 
 CXXFLAGS := -O3 -std=c++11 $(INCDIRS) -I $(SRCDIR) \
 		    -I $(BOOST_HEADERS) \
-			-I third-party/gtest-1.7.0/include \
-			-I third-party/gtest-1.7.0
+			-I $(GTEST_DIR)/include \
+			-I $(GTEST_DIR)
 
 GTEST_OBJECTS := gtest-all.o gtest_main.o
 DAZCON_OBJECTS := $(SRCDIR)/DB.o $(SRCDIR)/align.o $(SRCDIR)/Alignment.o \
@@ -15,7 +19,7 @@ DAZCON_OBJECTS := $(SRCDIR)/DB.o $(SRCDIR)/align.o $(SRCDIR)/Alignment.o \
 
 PBDAGCON_OBJECTS := $(SRCDIR)/AlnGraphBoost.o $(SRCDIR)/Alignment.o \
 					$(SRCDIR)/SimpleAligner.o 
-vpath %.cc third-party/gtest-1.7.0/src
+vpath %.cc $(gtest_version)/src
 
 # Special case, accomodate migration to BAM
 ifeq ($(wildcard $(PBBAM)/*),)
@@ -59,12 +63,21 @@ test_simple_aligner: $(GTEST_OBJECTS) $(PBDAGCON_OBJECTS) SimpleAlignerTest.o
 
 $(SRCDIR)/AlnGraphBoost.o: $(BOOST_HEADERS)
 
+$(GTEST_OBJECTS): $(GTEST_DIR)
+	$(CXX) $(GTEST_CPPFLAGS) -I$(GTEST_DIR) $(GTEST_CXXFLAGS) -c $</src/$(@:.o=.cc)
+
 $(BOOST_HEADERS):
 	@echo Fetching boost headers from $(URI)
 	@cd $(SRCDIR)/third-party && $(GET_BOOST)
+
+$(GTEST_DIR):
+	@echo Fetching gtest from $(gtest_uri)
+	$(get_gtest)
+	unzip -q $(gtest_version).zip
+	$(RM) $(gtest_version).zip
 
 clean:
 	$(RM) $(SRCDIR)/*.o
 	$(RM) *.o
 	$(RM) test_*
-
+	$(RM) -r $(gtest_version)
