@@ -12,6 +12,9 @@ init-submodule:
 	git submodule update
 	$(MAKE) -C blasr_libcpp/alignment nohdf=1
 	$(MAKE) -C blasr_libcpp/pbdata
+
+submodule-clean:
+	$(RM) -r blasr_libcpp
 	
 # C++ project build directives
 cpp-github:
@@ -29,3 +32,8 @@ cpp-check: cpp
 cpp-clean:
 	$(MAKE) -C src/cpp clean
 	$(MAKE) -C test/cpp clean
+
+clean-all: cpp-clean submodule-clean
+	$(RM)r src/cpp/third-party/boost_1_58_0-headersonly
+	$(RM)r test/cpp/gtest-1.7.0
+
