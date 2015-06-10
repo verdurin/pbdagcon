@@ -48,12 +48,12 @@ internet.
     > make init-submodule
 
     # build pbdagcon executable (Makefile fetches boost headers)
-    > make cpp
+    > make
     # You already have boost headers
-    > make cpp boost=<path to headers>
+    > make boost=<path to headers>
 
     # build and run unit tests
-    > make cpp-check
+    > make check
 
     # usage 
     > cd src/cpp

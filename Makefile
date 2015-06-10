@@ -5,16 +5,20 @@ all: cpp-github
 
 clean: cpp-clean
 
-test: cpp-check
+check: cpp-github-check
 
 init-submodule:
 	git submodule init
+	git submodule update
 	$(MAKE) -C blasr_libcpp/alignment nohdf=1
 	$(MAKE) -C blasr_libcpp/pbdata
 	
 # C++ project build directives
 cpp-github:
 	$(MAKE) -C src/cpp BLASR=$(PWD)/blasr_libcpp/alignment PBDATA=$(PWD)/blasr_libcpp/pbdata
+
+cpp-github-check:
+	$(MAKE) -C test/cpp BLASR=$(PWD)/blasr_libcpp/alignment PBDATA=$(PWD)/blasr_libcpp/pbdata
 
 cpp:
 	$(MAKE) -C src/cpp
