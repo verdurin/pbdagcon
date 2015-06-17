@@ -80,4 +80,3 @@ clean:
 	$(RM) $(SRCDIR)/*.o
 	$(RM) *.o
 	$(RM) test_*
-	$(RM) -r $(gtest_version)
