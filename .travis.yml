@@ -1,0 +1,4 @@
+language: cpp
+install: make && make check
+gcc:
+- 4.8.4
