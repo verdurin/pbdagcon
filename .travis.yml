@@ -1,4 +1,4 @@
 language: cpp
 install: make init-submodule && make && make check
-gcc:
-- 4.8.4
+compiler:
+  - gcc-4.8
