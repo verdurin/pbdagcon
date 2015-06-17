@@ -1,5 +1,8 @@
 language: cpp
-install: make init-submodule && make && make check
+script: 
+  - make init-submodule 
+  - make
+  - make check
 compiler: gcc
 before_install:
 - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y

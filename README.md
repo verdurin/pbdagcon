@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/pbjd/pbdagcon.svg?branch=master)](https://travis-ci.org/pbjd/pbdagcon)
 What is pbdagcon?
 =================
 
