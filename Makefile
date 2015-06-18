@@ -7,9 +7,10 @@ clean: cpp-clean
 
 check: cpp-github-check
 
+project: init-submodule cpp-github
+
 init-submodule:
-	git submodule init
-	git submodule update
+	git submodule update --init
 	$(MAKE) -C blasr_libcpp/alignment nohdf=1
 	$(MAKE) -C blasr_libcpp/pbdata
 
