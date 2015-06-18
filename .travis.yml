@@ -15,8 +15,6 @@ addons:
   apt:
     sources:
     - ubuntu-toolchain-r-test
-addons:
-  apt:
     packages:
     - libyajl-dev
     - libxml2-dev
