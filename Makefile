@@ -10,8 +10,11 @@ check: cpp-github-check
 project: init-submodule cpp-github
 
 init-submodule:
-	git submodule update --init
+	$(MAKE) update-submodule
 	$(MAKE) build-submodule
+
+update-submodule:
+	git submodule update --init
 
 build-submodule:
 	$(MAKE) -C blasr_libcpp/pbdata nopbbam=1 mklibconfig

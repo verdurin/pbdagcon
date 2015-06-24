@@ -51,11 +51,12 @@ internet.
 
     # build pbdagcon executable (Makefile fetches boost headers)
     make
-    # You already have boost headers
+    # or, if you already have boost headers
     make boost=<path to headers>
 
     # build and run unit tests
-    make check
+    # THIS IS CURRENTLY BROKEN. -cdunn
+    ###make check
 
     # usage 
     cd src/cpp
