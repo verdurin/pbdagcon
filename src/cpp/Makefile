@@ -14,7 +14,7 @@ all: pbdagcon
 
 dazcon: LDLIBS = -lpthread
 dazcon: $(COMMON_OBJECTS) $(DAZCON_OBJECTS)
-	$(CXX) -Wl,--no-as-needed $(OPTIMIZE) -o $@ $^ $(LDLIBS)
+	$(CXX) -Wl,--no-as-needed -o $@ $^ $(LDLIBS)
 
 # We are moving to BAM, which requires extra lib support when compiling against
 # libblasr.  This conditional allows backward compatable compilations with 
@@ -26,7 +26,7 @@ pbdagcon: LDLIBS = -lpbdata -lblasr -lpbbam -lhts -lz -lpthread
 endif
 pbdagcon: CXXFLAGS += $(INCDIRS)
 pbdagcon: $(COMMON_OBJECTS) $(PBDAGCON_OBJECTS)
-	$(CXX) $(LIBDIRS) -static -o $@ $^ $(LDFLAGS) $(LDLIBS)
+	$(CXX) -Wl,--no-as-needed $(LIBDIRS) -o $@ $^ $(LDFLAGS) $(LDLIBS)
 
 $(COMMON_OBJECTS): $(BOOST_HEADERS)
 
