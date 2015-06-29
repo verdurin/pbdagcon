@@ -11,6 +11,7 @@ PBDATA   ?= $(BIFX)/lib/cpp/pbdata
 PBBAM    := $(BIFX)/staging/PostPrimary/pbbam
 ZLIB     := $(PREBUILT)/zlib/zlib-1.2.5/$(OS_STRING2)/lib
 
+ifneq ($(wildcard $(PBBAM)/*),)
 EXTRA_INCDIRS := -I$(PBBAM)/include -I$(PBBAM)/third-party/htslib
 EXTRA_LDFLAGS := -L$(PBBAM)/lib -L$(PBBAM)/third-party/htslib -L$(ZLIB)
 
@@ -18,3 +19,4 @@ EXTRA_LDFLAGS := -L$(PBBAM)/lib -L$(PBBAM)/third-party/htslib -L$(ZLIB)
 # libblasr.  This conditional allows backward compatable compilations with
 # PacificBiosciences/blasr_libcpp.
 EXTRA_LDLIBS = -lpbbam -lhts -lz -lpthread
+endif

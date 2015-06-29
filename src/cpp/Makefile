@@ -1,11 +1,4 @@
-# Defines some variables specific to the PBI build env using relative paths
-BASEDIR  ?= ../../../../../..
-BIFX     := $(BASEDIR)/smrtanalysis/bioinformatics
-PBBAM    := $(BIFX)/staging/PostPrimary/pbbam
-# Conditionally include PBI overrides.
-ifneq ($(wildcard $(PBBAM)/*),)
-  include pbi.mk
-endif
+include pbi.mk
 include boost.mk
 
 COMMON_OBJECTS := Alignment.o AlnGraphBoost.o
