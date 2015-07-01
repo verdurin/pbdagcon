@@ -1,3 +1,3 @@
 [submodule "blasr_libcpp"]
 	path = blasr_libcpp
-	url = https://github.com/pb-cdunn/blasr_libcpp.git
+	url = https://github.com/PacificBiosciences/blasr_libcpp.git
