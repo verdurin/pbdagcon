@@ -27,7 +27,8 @@ vpath %.cc $(gtest_version)/src
 
 BUILDMSG = "=== Building $@ ==="
 
-all: check
+all: $(GTEST_DIR)
+	$(MAKE) check
 
 check: test_target_hit test_alngraph test_alignment test_simple_aligner
 
