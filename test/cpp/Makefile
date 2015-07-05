@@ -2,6 +2,8 @@
 # project source code
 SRCDIR := ../../src/cpp
 
+all:
+
 include $(SRCDIR)/pbi.mk
 include $(SRCDIR)/boost.mk
 include gtest.mk
@@ -56,14 +58,10 @@ test_simple_aligner: $(GTEST_OBJECTS) $(PBDAGCON_OBJECTS) SimpleAlignerTest.o
 	$(CXX) $^ -static -o $@ $(LDFLAGS) $(LDLIBS)
 	./$@
 
-$(SRCDIR)/AlnGraphBoost.o: $(BOOST_HEADERS)
+$(SRCDIR)/AlnGraphBoost.o: | $(BOOST_HEADERS)
 
 $(GTEST_OBJECTS): $(GTEST_DIR)
 	$(CXX) $(GTEST_CPPFLAGS) -I$(GTEST_DIR) $(GTEST_CXXFLAGS) -c $</src/$(@:.o=.cc)
-
-$(BOOST_HEADERS):
-	@echo Fetching boost headers from $(URI)
-	cd $(SRCDIR)/third-party && $(GET_BOOST)
 
 $(GTEST_DIR):
 	@echo Fetching gtest from $(gtest_uri)

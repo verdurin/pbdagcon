@@ -1,3 +1,6 @@
+mkfile_dir := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+#mkfile_dir := $(notdir $(patsubst %/,%,$(dir $(mkfile_path))))
+
 # A URI location for a copy of boost headers only
 URI := https://www.dropbox.com/s/g22iayi83p5gbbq/boost_1_58_0-headersonly.tbz2\?dl\=0
 # Obtain the boost URI and extract it into PWD
@@ -18,8 +21,8 @@ BOOST_HEADERS := $(PREBUILT)/boost/boost_1_58_0-headersonly
 endif
 
 # order-only b/c headers have old timestamps
-$(BOOST_HEADERS): | third-party/boost_1_58_0-headersonly.tbz2
-	tar xjf third-party/boost_1_58_0-headersonly.tbz2 -C third-party
+$(BOOST_HEADERS): | $(mkfile_dir)/third-party/boost_1_58_0-headersonly.tbz2
+	tar xjf $(mkfile_dir)/third-party/boost_1_58_0-headersonly.tbz2 -C $(mkfile_dir)/third-party
 
-third-party/boost_1_58_0-headersonly.tbz2:
+$(mkfile_dir)/third-party/boost_1_58_0-headersonly.tbz2:
 	curl -L $(URI) -o $@
