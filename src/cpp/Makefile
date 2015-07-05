@@ -1,3 +1,5 @@
+all:
+
 include pbi.mk
 include boost.mk
 
@@ -24,10 +26,7 @@ pbdagcon: CXXFLAGS += $(INCDIRS)
 pbdagcon: $(COMMON_OBJECTS) $(PBDAGCON_OBJECTS)
 	$(CXX) -Wl,--no-as-needed $(LIBDIRS) -o $@ $^ $(LDFLAGS) $(LDLIBS)
 
-$(COMMON_OBJECTS): $(BOOST_HEADERS)
-
-$(BOOST_HEADERS):
-	cd third-party && $(GET_BOOST)
+$(COMMON_OBJECTS) $(PBDAGCON_OBJECTS): | $(BOOST_HEADERS)
 
 clean:
 	$(RM) *.d

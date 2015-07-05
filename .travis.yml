@@ -1,8 +1,8 @@
 language: cpp
 script: 
-  - make init-submodule 
-  - make
-  - make check
+  - make -j init-submodule
+  - make --debug=b -j
+  - make --debug=v -j check
 compiler:
   - gcc
   - clang
