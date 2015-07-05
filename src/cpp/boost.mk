@@ -16,3 +16,10 @@ endif
 ifneq ($(wildcard $(PREBUILT)/boost/boost_1_58_0-headersonly/*),)
 BOOST_HEADERS := $(PREBUILT)/boost/boost_1_58_0-headersonly
 endif
+
+# order-only b/c headers have old timestamps
+$(BOOST_HEADERS): | third-party/boost_1_58_0-headersonly.tbz2
+	tar xjf third-party/boost_1_58_0-headersonly.tbz2 -C third-party
+
+third-party/boost_1_58_0-headersonly.tbz2:
+	curl -L $(URI) -o $@
