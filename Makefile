@@ -17,9 +17,9 @@ update-submodule:
 	git submodule update --init
 
 build-submodule:
-	$(MAKE) -C blasr_libcpp/pbdata nopbbam=1 mklibconfig
-	$(MAKE) -C blasr_libcpp/alignment -f simple.mk nohdf=1
-	$(MAKE) -C blasr_libcpp/pbdata nopbbam=1
+	cd blasr_libcpp; NOHDF=1 NOPBBAM=1 ./configure.py
+	$(MAKE) -C blasr_libcpp/pbdata -f build.mk all
+	$(MAKE) -C blasr_libcpp/alignment -f build.mk all
 
 submodule-clean:
 	$(RM) -r blasr_libcpp
