@@ -1,4 +1,8 @@
 .PHONY: all clean test init-submodule cpp-github cpp cpp-check cpp-clean
+PBDAGCON_ROOT:=.
+include defines.mk
+#export # to pass our defs onto blasr_libcpp -- not the best way, but ok
+
 SHELL = /bin/bash -e
 
 all: cpp-github
@@ -26,10 +30,10 @@ submodule-clean:
 	
 # C++ project build directives
 cpp-github:
-	$(MAKE) -C src/cpp -f ext.makefile BLASR=$(PWD)/blasr_libcpp/alignment PBDATA=$(PWD)/blasr_libcpp/pbdata
+	$(MAKE) -C src/cpp
 
 cpp-github-check:
-	$(MAKE) -C test/cpp BLASR=$(PWD)/blasr_libcpp/alignment PBDATA=$(PWD)/blasr_libcpp/pbdata
+	$(MAKE) -C test/cpp
 
 cpp:
 	$(MAKE) -C src/cpp
