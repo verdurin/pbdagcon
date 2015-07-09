@@ -1,0 +1,55 @@
+# pbdagcon
+local modname="$(basename "${BASH_SOURCE[0]}" .mobs.ish)";
+local modname_short=${modname%%_*}
+v_setvar "$modname" internal provides "$modname_short"
+
+local builddeps="
+    git
+    make
+    gcc
+    boost
+    zlib
+    htslib
+    pbbam
+    libpbdata
+    libblasr
+";
+v_setvar "$modname" internal builddeps "$builddeps"
+
+local rootdir_reltop="bioinformatics/tools/pbdagcon"
+local srcdir_abs="$g_build_topdir/$rootdir_reltop"
+local builddir_abs="$g_build_topdir/build/3.x/buildctl/pacbio/$modname_short"
+local outputdir_abs="$g_output_topdir/$rootdir_reltop/$g_output_dirname"
+local installdir_abs="$outputdir_abs/install"
+
+local git_fetchdir_abs="$outputdir_abs/build"
+
+v_setvar "$modname" output output_dir "$outputdir_abs"
+v_setvar "$modname" output src_dir "$srcdir_abs"
+v_setvar "$modname" output build_dir "$builddir_abs"
+v_setvar "$modname" output install_dir "$installdir_abs"
+v_setvar "$modname" output install_include_dir "$installdir_abs/include"
+v_setvar "$modname" output install_lib_dir "$installdir_abs/lib"
+v_setvar "$modname" output install_binwrapbuild_dir "$installdir_abs/binwrap-build"
+v_setvar "$modname" output git_fetch_dir "$git_fetchdir_abs"
+
+local git_remote_url;
+git_remote_url=$(make -C "$srcdir_abs" SHELL=/bin/bash --no-print-directory print-remote)
+local git_ref;
+git_ref=$(make -C "$srcdir_abs" SHELL=/bin/bash --no-print-directory print-ref)
+
+v_setvar "$modname" output git_remote_url "$git_remote_url"
+v_setvar "$modname" output git_ref "$git_ref"
+
+v_setvar "$modname" internal clean_cmd "bash $builddir_abs/buildctl.sh --mobs --clean"
+v_setvar "$modname" internal build_cmd "bash $builddir_abs/buildctl.sh --mobs --install-build"
+
+# Checks for skipping builds (for incremental builds)
+# This will generate $modname.infilestat.prebuild.out
+v_setvar "$modname" buildstate-prebuild infilestat "find $builddir_abs/buildctl.sh $srcdir_abs -path $outputdir_abs -prune -o ! -type d -printf '%T@,%m,%s,%y,%p,%l\n' | sort -n"
+
+# This will generate $modname.vardump.prebuild.out
+v_setvar "$modname" buildstate-prebuild vardump "v_printmodvars ${modname%%_*}"
+
+# This will generate $modname.outfilestat.postbuild.out
+v_setvar "$modname" buildstate-postbuild outfilestat "find $installdir_abs ! -type d -printf '%T@,%m,%s,%y,%p,%l\n' | sort -n"
