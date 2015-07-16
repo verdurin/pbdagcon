@@ -1,8 +1,6 @@
 language: cpp
 script: 
-  - make -j init-submodule
-  - make --debug=b -j
-  - make --debug=v -j check
+  - ./travis.sh
 compiler:
   - gcc
   - clang
