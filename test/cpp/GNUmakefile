@@ -56,6 +56,8 @@ DAZCON_OBJECTS := $(SRCDIR)/DB.o $(SRCDIR)/align.o $(SRCDIR)/Alignment.o \
 
 PBDAGCON_OBJECTS := $(SRCDIR)/AlnGraphBoost.o $(SRCDIR)/Alignment.o \
 					$(SRCDIR)/SimpleAligner.o 
+LD_LIBRARY_PATH+=${LIBBLASR_LIB}:${LIBPBDATA_LIB}:${LIBPBIHDF_LIB}:${PBBAM_LIB}:${HDF5_LIB}:${HTSLIB_LIB}:${ZLIB_LIB}
+export LD_LIBRARY_PATH
 
 vpath %.cc $(GTEST_SRC)
 
@@ -80,17 +82,17 @@ test_target: $(GTEST_OBJECTS) $(DAZCON_OBJECTS) TargetTest.o
 
 test_alngraph: $(GTEST_OBJECTS) $(PBDAGCON_OBJECTS) AlnGraphBoostTest.o
 	@echo $(BUILDMSG)
-	$(CXX) $^ -static -o $@ $(LDFLAGS) $(LDLIBS)
+	$(CXX) $^ -o $@ $(LDFLAGS) $(LDLIBS)
 	./$@
 
 test_alignment: $(GTEST_OBJECTS) $(PBDAGCON_OBJECTS) AlignmentTest.o
 	@echo $(BUILDMSG)
-	$(CXX) $^ -static -o $@ $(LDFLAGS) $(LDLIBS)
+	$(CXX) $^ -o $@ $(LDFLAGS) $(LDLIBS)
 	./$@
 
 test_simple_aligner: $(GTEST_OBJECTS) $(PBDAGCON_OBJECTS) SimpleAlignerTest.o
 	@echo $(BUILDMSG)
-	$(CXX) $^ -static -o $@ $(LDFLAGS) $(LDLIBS)
+	$(CXX) $^ -o $@ $(LDFLAGS) $(LDLIBS)
 	./$@
 
 $(SRCDIR)/AlnGraphBoost.o:
