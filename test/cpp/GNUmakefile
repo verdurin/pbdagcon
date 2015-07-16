@@ -16,7 +16,7 @@ INCDIRS := . \
 	${HDF5_INCLUDE} \
 	${HTSLIB_INCLUDE} \
 	${BOOST_INCLUDE} \
-    ${GTEST_DIR}/include \
+    ${GTEST_INCLUDE} \
 	third-party
 
 LIBDIRS := \
@@ -42,7 +42,10 @@ LDLIBS+= \
 CPPFLAGS+=$(patsubst %,-I%,${INCDIRS})
 LDFLAGS+=$(patsubst %,-L %,${LIBDIRS})
 
-GTEST_CPPFLAGS += -isystem $(GTEST_DIR)/include -isystem ${GTEST_DIR}
+# For fused-src, gtest-all.cc includes gtest/*.
+# For non-fused, gtest-all.cc includes src/gtest-*.
+# So we add -I ${GTEST_SRC}/.. for the latter case.
+GTEST_CPPFLAGS += -isystem $(GTEST_INCLUDE) -isystem ${GTEST_SRC}/..
 GTEST_CXXFLAGS += -g -Wall -Wextra -pthread
 
 CXXFLAGS := -O3 -std=c++11
@@ -53,7 +56,10 @@ DAZCON_OBJECTS := $(SRCDIR)/DB.o $(SRCDIR)/align.o $(SRCDIR)/Alignment.o \
 
 PBDAGCON_OBJECTS := $(SRCDIR)/AlnGraphBoost.o $(SRCDIR)/Alignment.o \
 					$(SRCDIR)/SimpleAligner.o 
-vpath %.cc $(GTEST_DIR)/src
+LD_LIBRARY_PATH+=${LIBBLASR_LIB}:${LIBPBDATA_LIB}:${LIBPBIHDF_LIB}:${PBBAM_LIB}:${HDF5_LIB}:${HTSLIB_LIB}:${ZLIB_LIB}
+export LD_LIBRARY_PATH
+
+vpath %.cc $(GTEST_SRC)
 
 BUILDMSG = "=== Building $@ ==="
 
@@ -76,23 +82,23 @@ test_target: $(GTEST_OBJECTS) $(DAZCON_OBJECTS) TargetTest.o
 
 test_alngraph: $(GTEST_OBJECTS) $(PBDAGCON_OBJECTS) AlnGraphBoostTest.o
 	@echo $(BUILDMSG)
-	$(CXX) $^ -static -o $@ $(LDFLAGS) $(LDLIBS)
+	$(CXX) $^ -o $@ $(LDFLAGS) $(LDLIBS)
 	./$@
 
 test_alignment: $(GTEST_OBJECTS) $(PBDAGCON_OBJECTS) AlignmentTest.o
 	@echo $(BUILDMSG)
-	$(CXX) $^ -static -o $@ $(LDFLAGS) $(LDLIBS)
+	$(CXX) $^ -o $@ $(LDFLAGS) $(LDLIBS)
 	./$@
 
 test_simple_aligner: $(GTEST_OBJECTS) $(PBDAGCON_OBJECTS) SimpleAlignerTest.o
 	@echo $(BUILDMSG)
-	$(CXX) $^ -static -o $@ $(LDFLAGS) $(LDLIBS)
+	$(CXX) $^ -o $@ $(LDFLAGS) $(LDLIBS)
 	./$@
 
 $(SRCDIR)/AlnGraphBoost.o:
 
 $(GTEST_OBJECTS):
-	$(CXX) $(GTEST_CPPFLAGS) $(GTEST_CXXFLAGS) -c ${GTEST_DIR}/src/$(@:.o=.cc)
+	$(CXX) $(GTEST_CPPFLAGS) $(GTEST_CXXFLAGS) -c ${GTEST_SRC}/$(@:.o=.cc)
 
 clean:
 	$(RM) $(SRCDIR)/*.o
