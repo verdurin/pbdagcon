@@ -45,18 +45,19 @@ internet.
 
 ### Compile/Check (pbdagcon)
 ```sh
-    # First fetch and build the relevant portions of the blasr_libcpp
+    # First, configure your build. (You can look at `defines.mk` and
+    # `blasr_libcpp/defines.mk` to diagnose any problems.)
+    ./configure.py --boost --gtest --sub --no-pbbam
+
+    # Then, fetch and build the relevant portions of the blasr_libcpp
     # submodule
     make init-submodule
 
     # build pbdagcon executable (Makefile fetches boost headers)
     make
-    # or, if you already have boost headers
-    make boost=<path to headers>
 
     # build and run unit tests
-    # THIS IS CURRENTLY BROKEN. -cdunn
-    ###make check
+    make check
 
     # usage 
     cd src/cpp

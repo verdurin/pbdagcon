@@ -8,3 +8,4 @@ dazcon
 test_*
 boost_*
 gtest-*
+defines.mk
