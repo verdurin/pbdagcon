@@ -26,7 +26,7 @@ submodule-clean:
 	
 # C++ project build directives
 cpp-github:
-	$(MAKE) -C src/cpp BLASR=$(PWD)/blasr_libcpp/alignment PBDATA=$(PWD)/blasr_libcpp/pbdata
+	$(MAKE) -C src/cpp -f ext.makefile BLASR=$(PWD)/blasr_libcpp/alignment PBDATA=$(PWD)/blasr_libcpp/pbdata
 
 cpp-github-check:
 	$(MAKE) -C test/cpp BLASR=$(PWD)/blasr_libcpp/alignment PBDATA=$(PWD)/blasr_libcpp/pbdata

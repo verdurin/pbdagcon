@@ -4,8 +4,8 @@ SRCDIR := ../../src/cpp
 
 all:
 
-include $(SRCDIR)/pbi.mk
-include $(SRCDIR)/boost.mk
+include $(SRCDIR)/ext.pbi.mk
+include $(SRCDIR)/ext.boost.mk
 include gtest.mk
 
 GTEST_CPPFLAGS += -isystem $(GTEST_DIR)/include
