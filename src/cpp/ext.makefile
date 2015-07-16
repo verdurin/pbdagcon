@@ -1,7 +1,7 @@
 all:
 
-include pbi.mk
-include boost.mk
+include ext.pbi.mk
+include ext.boost.mk
 
 COMMON_OBJECTS := Alignment.o AlnGraphBoost.o
 PBDAGCON_OBJECTS := BlasrM5AlnProvider.o main.o SimpleAligner.o
