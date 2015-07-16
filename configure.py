@@ -147,7 +147,7 @@ def compose_defines_pacbio(envin):
     #setifenv(env, envin, 'LIBBLASR_LIB', '../alignment/libblasr.so')
     #setifenv(env, envin, 'nohdf', '1')
     possibs = set([
-            'CXX', 'AR',
+            'CC', 'CXX', 'AR',
             'GTEST_DIR',
             'LIBBLASR_INCLUDE', 'LIBBLASR_LIB', 'LIBBLASR_LIBFLAGS',
             'LIBPBDATA_INCLUDE', 'LIBPBDATA_LIB', 'LIBPBDATA_LIBFLAGS',
