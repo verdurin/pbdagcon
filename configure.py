@@ -148,7 +148,7 @@ def compose_defines_pacbio(envin):
     #setifenv(env, envin, 'nohdf', '1')
     possibs = set([
             'CC', 'CXX', 'AR',
-            'GTEST_DIR',
+            'GTEST_INCLUDE', 'GTEST_SRC',
             'LIBBLASR_INCLUDE', 'LIBBLASR_LIB', 'LIBBLASR_LIBFLAGS',
             'LIBPBDATA_INCLUDE', 'LIBPBDATA_LIB', 'LIBPBDATA_LIBFLAGS',
             'LIBPBIHDF_INCLUDE', 'LIBPBIHDF_LIB', 'LIBPBIHDF_LIBFLAGS',
@@ -255,7 +255,9 @@ def main(prog, *args):
     if conf.boost_headers:
         envin['BOOST_INCLUDE'] = fetch_boost_headers()
     if conf.gtest:
-        envin['GTEST_DIR'] = fetch_gtest()
+        gtest_dir = fetch_gtest()
+        envin['GTEST_INCLUDE'] = os.path.join(gtest_dir, 'include')
+        envin['GTEST_SRC'] = os.path.join(gtest_dir, 'src')
     if conf.submodules:
         set_defs_submodule_defaults(envin, conf.no_pbbam)
         conf.no_pbbam = True

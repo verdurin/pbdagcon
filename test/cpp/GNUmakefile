@@ -16,7 +16,7 @@ INCDIRS := . \
 	${HDF5_INCLUDE} \
 	${HTSLIB_INCLUDE} \
 	${BOOST_INCLUDE} \
-    ${GTEST_DIR}/include \
+    ${GTEST_DIR_INCLUDE} \
 	third-party
 
 LIBDIRS := \
@@ -42,7 +42,7 @@ LDLIBS+= \
 CPPFLAGS+=$(patsubst %,-I%,${INCDIRS})
 LDFLAGS+=$(patsubst %,-L %,${LIBDIRS})
 
-GTEST_CPPFLAGS += -isystem $(GTEST_DIR)/include -isystem ${GTEST_DIR}
+GTEST_CPPFLAGS += -isystem $(GTEST_DIR_INCLUDE) -isystem ${GTEST_SRC}
 GTEST_CXXFLAGS += -g -Wall -Wextra -pthread
 
 CXXFLAGS := -O3 -std=c++11
@@ -53,7 +53,7 @@ DAZCON_OBJECTS := $(SRCDIR)/DB.o $(SRCDIR)/align.o $(SRCDIR)/Alignment.o \
 
 PBDAGCON_OBJECTS := $(SRCDIR)/AlnGraphBoost.o $(SRCDIR)/Alignment.o \
 					$(SRCDIR)/SimpleAligner.o 
-vpath %.cc $(GTEST_DIR)/src
+vpath %.cc $(GTEST_SRC)
 
 BUILDMSG = "=== Building $@ ==="
 
