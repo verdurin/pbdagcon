@@ -1,3 +1,9 @@
 [submodule "blasr_libcpp"]
 	path = blasr_libcpp
-	url = https://github.com/PacificBiosciences/blasr_libcpp.git
+	url = git://github.com/PacificBiosciences/blasr_libcpp.git
+[submodule "DALIGNER"]
+	path = DALIGNER
+	url = git://github.com/PacificBiosciences/DALIGNER.git
+[submodule "DAZZ_DB"]
+	path = DAZZ_DB
+	url = git://github.com/PacificBiosciences/DAZZ_DB.git
