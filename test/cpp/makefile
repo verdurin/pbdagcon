@@ -10,6 +10,7 @@ foo:
 
 INCDIRS := . \
 	${SRCDIR} \
+	${SRCDIR}/../../src/cpp \
 	${LIBBLASR_INCLUDE} \
 	${LIBPBDATA_INCLUDE} \
 	${LIBPBIHDF_INCLUDE} \
