@@ -1,7 +1,7 @@
 all:
 
-PBDAGCON_ROOT:=../..
-include ../../defines.mk
+THISDIR:=$(dir $(lastword ${MAKEFILE_LIST}))
+-include ${CURDIR}/../../defines.mk
 
 COMMON_OBJECTS := Alignment.o AlnGraphBoost.o
 PBDAGCON_OBJECTS := BlasrM5AlnProvider.o main.o SimpleAligner.o
@@ -18,7 +18,7 @@ INCDIRS := \
 	${HDF5_INCLUDE} \
 	${HTSLIB_INCLUDE} \
 	${BOOST_INCLUDE} \
-	third-party
+	${THISDIR}/third-party
 LIBDIRS := \
 	${LIBBLASR_LIB} \
 	${LIBPBDATA_LIB} \

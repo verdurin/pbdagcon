@@ -1,11 +1,12 @@
 .PHONY: all check test_target_hit test_alngraph test_alignment test_simple_aligner
 all:
 
-override PBDAGCON_ROOT:=../..
-SRCDIR := ${PBDAGCON_ROOT}/src/cpp
-
-include ../../defines.mk
-
+THISDIR:=$(dir $(lastword ${MAKEFILE_LIST}))
+-include ${CURDIR}/../../defines.mk
+SRCDIR := ${THISDIR}
+VPATH:=${VPATH}:${THISDIR}/../../src/cpp
+foo:
+	echo ${VPATH}
 
 INCDIRS := . \
 	${SRCDIR} \
@@ -51,11 +52,11 @@ GTEST_CXXFLAGS += -g -Wall -Wextra -pthread
 CXXFLAGS := -O3 -std=c++11
 
 GTEST_OBJECTS := gtest-all.o gtest_main.o
-DAZCON_OBJECTS := $(SRCDIR)/DB.o $(SRCDIR)/align.o $(SRCDIR)/Alignment.o \
-			      $(SRCDIR)/DazAlnProvider.o
+DAZCON_OBJECTS := DB.o align.o Alignment.o \
+			      DazAlnProvider.o
 
-PBDAGCON_OBJECTS := $(SRCDIR)/AlnGraphBoost.o $(SRCDIR)/Alignment.o \
-					$(SRCDIR)/SimpleAligner.o 
+PBDAGCON_OBJECTS := AlnGraphBoost.o Alignment.o \
+					SimpleAligner.o 
 LD_LIBRARY_PATH+=${LIBBLASR_LIB}:${LIBPBDATA_LIB}:${LIBPBIHDF_LIB}:${PBBAM_LIB}:${HDF5_LIB}:${HTSLIB_LIB}:${ZLIB_LIB}
 export LD_LIBRARY_PATH
 
@@ -88,7 +89,8 @@ test_alngraph: $(GTEST_OBJECTS) $(PBDAGCON_OBJECTS) AlnGraphBoostTest.o
 test_alignment: $(GTEST_OBJECTS) $(PBDAGCON_OBJECTS) AlignmentTest.o
 	@echo $(BUILDMSG)
 	$(CXX) $^ -o $@ $(LDFLAGS) $(LDLIBS)
-	./$@
+	# This needs basic.m5 from this directory.
+	cd ${THISDIR} && ./$@
 
 test_simple_aligner: $(GTEST_OBJECTS) $(PBDAGCON_OBJECTS) SimpleAlignerTest.o
 	@echo $(BUILDMSG)

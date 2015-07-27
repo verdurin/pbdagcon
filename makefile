@@ -1,7 +1,8 @@
 .PHONY: all clean test init-submodule cpp-github cpp cpp-check cpp-clean
-PBDAGCON_ROOT:=.
-include defines.mk
-#export # to pass our defs onto blasr_libcpp -- not the best way, but ok
+
+THISDIR:=$(dir $(lastword ${MAKEFILE_LIST}))
+ROOT:=${THISDIR}
+-include ${CURDIR}/defines.mk
 
 SHELL = /bin/bash -e
 
