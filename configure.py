@@ -10,18 +10,11 @@ import contextlib
 import os
 import sys
 
-PBDAGCON_ROOT = '${PBDAGCON_ROOT}'
+PBDAGCON_ROOT = os.path.abspath(os.path.dirname(__file__))
 
 def log(msg):
     sys.stderr.write(msg)
     sys.stderr.write('\n')
-
-def system(cmd):
-    log(cmd)
-    status = os.system(cmd)
-    if status:
-        raise Exception('%d <- %r' %(status, cmd))
-    return
 
 def shell(cmd):
     log(cmd)
@@ -30,6 +23,16 @@ def shell(cmd):
         raise Exception('%d <-| %r' %(status, cmd))
     return output
 
+def system(cmd):
+    log(cmd)
+    status = os.system(cmd)
+    if status:
+        raise Exception('%d <- %r' %(status, cmd))
+    return
+
+def mkdirs(path):
+    if not os.path.isdir(path):
+        os.makedirs(path)
 
 @contextlib.contextmanager
 def cd(nwd):
@@ -40,36 +43,38 @@ def cd(nwd):
     os.chdir(cwd)
     log('cd %r <- %r' %(cwd, nwd))
 
-def fetch_gtest():
+def fetch_gtest(build_dir):
     gtest_version = 'gtest-1.7.0'
     gtest_uri = 'https://googletest.googlecode.com/files/%s.zip' %gtest_version
-    gdir = os.path.join('test', 'cpp', gtest_version)
+    gdir = os.path.join(build_dir, 'test', 'cpp', gtest_version)
     if not os.path.isdir(gdir):
+        #mkdirs(gdir)
         zipfile = gdir + '.zip'
         if not os.path.isfile(zipfile):
             get_gtest_cmd = 'curl -L %s --output %s' %(gtest_uri, zipfile)
             system(get_gtest_cmd)
-        install_gtest_cmd = 'unzip -q %s -d %s' %(zipfile, os.path.join('test', 'cpp'))
+        install_gtest_cmd = 'unzip -q %s -d %s' %(zipfile, os.path.join(build_dir, 'test', 'cpp'))
         system(install_gtest_cmd)
     assert os.path.isdir(gdir)
-    return os.path.join(PBDAGCON_ROOT, gdir)
+    return gdir
 
-def fetch_boost_headers():
-    """Fetch into ./src/cpp/third-party/
+def fetch_boost_headers(build_dir):
+    """Fetch into {build_dir}/src/cpp/third-party/
     Return actual directory path, relative to subdirs.
     """
     uri = 'https://www.dropbox.com/s/g22iayi83p5gbbq/boost_1_58_0-headersonly.tbz2?dl=0'
-    hdir = os.path.join('src', 'cpp', 'third-party', 'boost_1_58_0-headersonly')
+    hdir = os.path.join(build_dir, 'src', 'cpp', 'third-party', 'boost_1_58_0-headersonly')
     if not os.path.isdir(hdir):
+        mkdirs(os.path.dirname(hdir))
         #get_boost_cmd = 'curl -L %s | tar xjf -C src/cpp/third-party -' %uri
-        tbz = os.path.join('src', 'cpp', 'third-party', 'boost_1_58_0-headersonly.tbz2')
+        tbz = os.path.join(build_dir, 'src', 'cpp', 'third-party', 'boost_1_58_0-headersonly.tbz2')
         if not os.path.isfile(tbz):
             get_boost_cmd = 'curl -L %s --output %s' %(uri, tbz)
             system(get_boost_cmd)
-        install_boost_cmd = 'tar vxjf %s -C src/cpp/third-party | head' %tbz
+        install_boost_cmd = 'tar vxjf %s -C %s/src/cpp/third-party | head' %(tbz, build_dir)
         system(install_boost_cmd)
     assert os.path.isdir(hdir)
-    return os.path.join(PBDAGCON_ROOT, hdir)
+    return hdir
 
 def update_content(fn, content):
     current_content = open(fn).read() if os.path.exists(fn) else None
@@ -161,27 +166,11 @@ def compose_defines_pacbio(envin):
     update_env_if(env, envin, possibs)
     return compose_defs_env(env)
 
-def update(content_defines_mk):
-    """ Write these relative to the same directory as *this* file.
-    """
-    thisdir = os.path.dirname(os.path.abspath(__file__))
-    fn_defines_mk = os.path.join(thisdir, 'defines.mk')
-    update_content(fn_defines_mk, content_defines_mk)
-
-def configure_nopbbam():
-    HDF_HEADERS = fetch_hdf5_headers()
-    content1 = compose_defines_with_hdf_headers(HDF_HEADERS)
-    update(content1)
-
-def configure_nopbbam_nohdf5():
-    content1 = compose_defines()
-    update(content1)
-
-def configure_pacbio(envin, shared):
+def configure_pacbio(envin, shared, build_dir):
     content1 = compose_defines_pacbio(envin)
     if shared:
         content1 += 'LDLIBS+=-lrt\n'
-    update(content1)
+    update_content(os.path.join(build_dir, 'defines.mk'), content1)
 
 def get_make_style_env(envin, args):
     envout = dict()
@@ -206,6 +195,8 @@ def parse_args(args):
             help='Build for dynamic linking.')
     parser.add_argument('--mode', default='opt',
             help='debug, opt, profile [default=%(default)s] CURRENTLY IGNORED')
+    parser.add_argument('--build-dir',
+            help='Can be different from source directory, but only when *not* also building submodule.')
     parser.add_argument('makevars', nargs='*',
             help='Variables in the style of make: FOO=val1 BAR=val2 etc.')
     return parser.parse_args(args)
@@ -247,22 +238,43 @@ def set_defs_submodule_defaults(env, nopbbam):
         if k not in env:
             env[k] = defaults[k]
 
+def write_makefile(build_dir_root, src_dir_root, makefilename, relpath):
+    src_dir = os.path.join(src_dir_root, relpath)
+    build_dir = os.path.join(build_dir_root, relpath)
+    content = """\
+VPATH:=%(src_dir)s
+include %(src_dir)s/%(makefilename)s
+""" %dict(makefilename=makefilename, src_dir=src_dir)
+    mkdirs(build_dir)
+    fn = os.path.join(build_dir, makefilename)
+    update_content(fn, content)
+
+def write_makefiles(build_dir):
+    write_makefile(build_dir, PBDAGCON_ROOT, 'makefile', '.')
+    write_makefile(build_dir, PBDAGCON_ROOT, 'makefile', 'src/cpp')
+    write_makefile(build_dir, PBDAGCON_ROOT, 'makefile', 'test/cpp')
+
 def main(prog, *args):
     """We are still deciding what env-vars to use, if any.
     """
     conf = parse_args(args)
     envin = get_make_style_env(os.environ, conf.makevars)
+    if conf.build_dir is not None:
+        write_makefiles(conf.build_dir)
+    else:
+        conf.build_dir = '.'
+    conf.build_dir = os.path.abspath(conf.build_dir)
     if conf.boost_headers:
-        envin['BOOST_INCLUDE'] = fetch_boost_headers()
+        envin['BOOST_INCLUDE'] = fetch_boost_headers(conf.build_dir)
     if conf.gtest:
-        gtest_dir = fetch_gtest()
+        gtest_dir = fetch_gtest(conf.build_dir)
         envin['GTEST_INCLUDE'] = os.path.join(gtest_dir, 'include')
         envin['GTEST_SRC'] = os.path.join(gtest_dir, 'src')
     if conf.submodules:
         set_defs_submodule_defaults(envin, conf.no_pbbam)
         conf.no_pbbam = True
     set_defs_defaults(envin, conf.no_pbbam)
-    configure_pacbio(envin, conf.shared)
+    configure_pacbio(envin, conf.shared, conf.build_dir)
 
 
 if __name__=="__main__":
