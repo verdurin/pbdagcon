@@ -91,7 +91,7 @@ test_alignment: $(GTEST_OBJECTS) $(PBDAGCON_OBJECTS) AlignmentTest.o
 	@echo $(BUILDMSG)
 	$(CXX) $^ -o $@ $(LDFLAGS) $(LDLIBS)
 	# This needs basic.m5 from this directory.
-	cd ${THISDIR} && ./$@
+	cd ${THISDIR} && ${CURDIR}/$@
 
 test_simple_aligner: $(GTEST_OBJECTS) $(PBDAGCON_OBJECTS) SimpleAlignerTest.o
 	@echo $(BUILDMSG)
