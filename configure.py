@@ -112,7 +112,7 @@ nohdf             ?=1
 """%(dict(thisdir=thisdir))
 
 def get_OS_STRING():
-    G_BUILDOS_CMD = """bash -c 'set -e; set -o pipefail; id=$(lsb_release -si | tr "[:upper:]" "[:lower:]"); rel=$(lsb_release -sr); case $id in ubuntu) printf "$id-%04d\n" ${rel/./};; centos) echo "$id-${rel%%.*}";; *) echo "$id-$rel";; esac' 2>/dev/null"""
+    G_BUILDOS_CMD = """bash -c 'set -e; set -o pipefail; id=$(lsb_release -si | tr "[:upper:]" "[:lower:]"); rel=$(lsb_release -sr); case $id in ubuntu) printf "$id-%04d\n" ${rel/./};; centos) echo "$id-${rel%%.*}";; *) echo "$id-$rel";; esac'"""
     return shell(G_BUILDOS_CMD)
 def get_PREBUILT():
     cmd = 'cd ../../../../prebuilt.out 2>/dev/null && pwd || echo -n notfound'
@@ -207,8 +207,8 @@ def set_defs_defaults(env, nopbbam):
         'LIBBLASR_LIBFLAGS':  '-lblasr',
         'SHELL': 'bash -xe',
     }
-    setifenvf(defaults, env, 'OS_STRING', get_OS_STRING)
-    setifenvf(defaults, env, 'PREBUILT', get_PREBUILT)
+    #setifenvf(defaults, env, 'OS_STRING', get_OS_STRING)
+    #setifenvf(defaults, env, 'PREBUILT', get_PREBUILT)
     pbbam_defaults = {
         'LIBPBIHDF_LIBFLAGS': '-lpbihdf',
         'PBBAM_LIBFLAGS': '-lpbbam',
