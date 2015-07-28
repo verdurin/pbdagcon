@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -6,6 +7,14 @@
 #include "Alignment.hpp"
 
 using namespace dagcon;
+
+std::string dataDir() {
+    char const* val = getenv("PBDAGCON_TEST_DATA_DIR");
+    if (!val || !*val) {
+        return ".";
+    }
+    return val;
+}
 
 TEST(Alignment, Normalize) {
     Alignment a, b;
@@ -38,7 +47,9 @@ TEST(Alignment, Normalize) {
 }
 
 TEST(Alignment, ParseBasic) {
-    std::ifstream file("basic.m5");
+    std::string fn = dataDir() + "basic.m5";
+    std::ifstream file(fn.c_str());
+    ASSERT_TRUE(file.good());
     Alignment aln;
     file >> aln;
     EXPECT_EQ(1, aln.start);
@@ -52,7 +63,9 @@ TEST(Alignment, ParseBasic) {
 }
 
 TEST(Alignment, ParseQuery) {
-    std::ifstream file("parsequery.m5");
+    std::string fn = dataDir() + "parsequery.m5";
+    std::ifstream file(fn.c_str());
+    ASSERT_TRUE(file.good());
     Alignment aln;
     Alignment::groupByTarget = false;
     file >> aln;

@@ -1,4 +1,4 @@
-.PHONY: all clean test init-submodule cpp-github cpp cpp-check cpp-clean
+.PHONY: all clean test init-submodule cpp cpp-check cpp-clean
 
 THISDIR:=$(dir $(lastword ${MAKEFILE_LIST}))
 ROOT:=${THISDIR}
@@ -6,13 +6,13 @@ ROOT:=${THISDIR}
 
 SHELL = /bin/bash -e
 
-all: cpp-github
+all: cpp
 
 clean: cpp-clean
 
-check: cpp-github-check
+check: cpp-check
 
-project: init-submodule cpp-github
+project: init-submodule cpp
 
 init-submodule:
 	$(MAKE) update-submodule
@@ -29,13 +29,6 @@ build-submodule:
 submodule-clean:
 	$(RM) -r blasr_libcpp
 	
-# C++ project build directives
-cpp-github:
-	$(MAKE) -C src/cpp
-
-cpp-github-check:
-	$(MAKE) -C test/cpp
-
 cpp:
 	$(MAKE) -C src/cpp
 

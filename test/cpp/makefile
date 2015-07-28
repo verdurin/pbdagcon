@@ -5,8 +5,6 @@ THISDIR:=$(dir $(lastword ${MAKEFILE_LIST}))
 -include ${CURDIR}/../../defines.mk
 SRCDIR := ${THISDIR}
 VPATH:=${VPATH}:${THISDIR}/../../src/cpp
-foo:
-	echo ${VPATH}
 
 INCDIRS := . \
 	${SRCDIR} \
@@ -18,7 +16,7 @@ INCDIRS := . \
 	${HDF5_INCLUDE} \
 	${HTSLIB_INCLUDE} \
 	${BOOST_INCLUDE} \
-    ${GTEST_INCLUDE} \
+	${GTEST_INCLUDE} \
 	third-party
 
 LIBDIRS := \
@@ -57,53 +55,53 @@ DAZCON_OBJECTS := DB.o align.o Alignment.o \
 			      DazAlnProvider.o
 
 PBDAGCON_OBJECTS := AlnGraphBoost.o Alignment.o \
-					SimpleAligner.o 
-LD_LIBRARY_PATH+=${LIBBLASR_LIB}:${LIBPBDATA_LIB}:${LIBPBIHDF_LIB}:${PBBAM_LIB}:${HDF5_LIB}:${HTSLIB_LIB}:${ZLIB_LIB}
-export LD_LIBRARY_PATH
+					SimpleAligner.o
+pbdagcon_testexes :=    test-alngraph \
+                        test-alignment \
+                        test-simple_aligner \
+                        ${null}
+dazcon_testexes :=    test-target_hit \
+                      test-target \
+                      ${null}
+# Remove the test from the broken_testexes variable, once fixed.
+broken_testexes := test-target \
+                   ${null}
+testexes := ${pbdagcon_testexes} ${dazcon_testexes}
+# Remove broken tests exes from the testexes list
+testexes   := $(filter-out ${broken_testexes},${testexes})
 
-vpath %.cc $(GTEST_SRC)
+ldp+=${LIBBLASR_LIB}:${LIBPBDATA_LIB}:${LIBPBIHDF_LIB}:${PBBAM_LIB}:${HDF5_LIB}:${HTSLIB_LIB}:${ZLIB_LIB}:${LD_LIBRARY_PATH}
+#export LD_LIBRARY_PATH
+
+vpath %.cc ${GTEST_SRC}
 
 BUILDMSG = "=== Building $@ ==="
 
-all:
-	$(MAKE) check
+${GTEST_OBJECTS}: CXXFLAGS+=${GTEST_CXXFLAGS}
+${GTEST_OBJECTS}: CPPFLAGS+=${GTEST_CPPFLAGS}
 
-check: test_target_hit test_alngraph test_alignment test_simple_aligner
+all: check
+check: gtest-run
+gtest-run: $(testexes:%=%-gtestrun)
+gtest-build: ${testexes}
+xml:
+	mkdir xml
 
-# XXX: need to mock out db_ in order to run test_target
+%-gtestrun: % | xml
+	LD_LIBRARY_PATH=${ldp} PBDAGCON_TEST_DATA_DIR=${THISDIR} ./$< --gtest_output=xml:xml/${<F}.xml
+test-%:
+	${CXX} -o $@ $^ ${LDFLAGS} ${LDLIBS}
 
-test_target_hit: $(GTEST_OBJECTS) $(DAZCON_OBJECTS) TargetHitTest.o 
-	@echo $(BUILDMSG)
-	$(CXX) $^ -o $@ -lpthread
-	./$@
+# dazcon  test executables:
+test-target_hit: ${GTEST_OBJECTS} ${DAZCON_OBJECTS} TargetHitTest.o
+test-target: ${GTEST_OBJECTS} ${DAZCON_OBJECTS} TargetTest.o
 
-test_target: $(GTEST_OBJECTS) $(DAZCON_OBJECTS) TargetTest.o
-	@echo $(BUILDMSG)
-	$(CXX) $^ -o $@ -lpthread
-	./$@
-
-test_alngraph: $(GTEST_OBJECTS) $(PBDAGCON_OBJECTS) AlnGraphBoostTest.o
-	@echo $(BUILDMSG)
-	$(CXX) $^ -o $@ $(LDFLAGS) $(LDLIBS)
-	./$@
-
-test_alignment: $(GTEST_OBJECTS) $(PBDAGCON_OBJECTS) AlignmentTest.o
-	@echo $(BUILDMSG)
-	$(CXX) $^ -o $@ $(LDFLAGS) $(LDLIBS)
-	# This needs basic.m5 from this directory.
-	cd ${THISDIR} && ${CURDIR}/$@
-
-test_simple_aligner: $(GTEST_OBJECTS) $(PBDAGCON_OBJECTS) SimpleAlignerTest.o
-	@echo $(BUILDMSG)
-	$(CXX) $^ -o $@ $(LDFLAGS) $(LDLIBS)
-	./$@
-
-$(SRCDIR)/AlnGraphBoost.o:
-
-$(GTEST_OBJECTS):
-	$(CXX) $(GTEST_CPPFLAGS) $(GTEST_CXXFLAGS) -c ${GTEST_SRC}/$(@:.o=.cc)
+# pbdagcon test executables:
+test-alngraph: ${GTEST_OBJECTS} ${PBDAGCON_OBJECTS} AlnGraphBoostTest.o
+test-alignment: ${GTEST_OBJECTS} ${PBDAGCON_OBJECTS} AlignmentTest.o
+test-simple_aligner: ${GTEST_OBJECTS} ${PBDAGCON_OBJECTS} SimpleAlignerTest.o
 
 clean:
-	$(RM) $(SRCDIR)/*.o
-	$(RM) *.o
-	$(RM) test_*
+	${RM} ${SRCDIR}/*.o
+	${RM} *.o
+	${RM} test_*
