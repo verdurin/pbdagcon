@@ -55,7 +55,7 @@ DAZCON_OBJECTS := DB.o align.o Alignment.o \
 			      DazAlnProvider.o
 
 PBDAGCON_OBJECTS := AlnGraphBoost.o Alignment.o \
-					SimpleAligner.o 
+					SimpleAligner.o
 pbdagcon_testexes :=    test_alngraph \
                         test_alignment \
                         test_simple_aligner \
@@ -91,31 +91,31 @@ xml:
 	LD_LIBRARY_PATH=${ldp} PBDAGCON_TEST_DATA_DIR=${THISDIR} ./$< --gtest_output=xml:xml/${<F}.xml
 
 # dazcon  test executables:
-test_target_hit: $(GTEST_OBJECTS) $(DAZCON_OBJECTS) TargetHitTest.o 
-	@echo $(BUILDMSG)
-	$(CXX) $^ -o $@ -lpthread
+test_target_hit: ${GTEST_OBJECTS} ${DAZCON_OBJECTS} TargetHitTest.o
+	@echo ${BUILDMSG}
+	${CXX} $^ -o $@ -lpthread
 
-test_target: $(GTEST_OBJECTS) $(DAZCON_OBJECTS) TargetTest.o
-	@echo $(BUILDMSG)
-	$(CXX) $^ -o $@ -lpthread
+test_target: ${GTEST_OBJECTS} ${DAZCON_OBJECTS} TargetTest.o
+	@echo ${BUILDMSG}
+	${CXX} $^ -o $@ -lpthread
 
 # pbdagcon test executables:
-test_alngraph: $(GTEST_OBJECTS) $(PBDAGCON_OBJECTS) AlnGraphBoostTest.o
-	@echo $(BUILDMSG)
-	$(CXX) -o $@ $^ $(LDFLAGS) $(LDLIBS)
+test_alngraph: ${GTEST_OBJECTS} ${PBDAGCON_OBJECTS} AlnGraphBoostTest.o
+	@echo ${BUILDMSG}
+	${CXX} -o $@ $^ ${LDFLAGS} ${LDLIBS}
 
-test_alignment: $(GTEST_OBJECTS) $(PBDAGCON_OBJECTS) AlignmentTest.o
-	@echo $(BUILDMSG)
-	$(CXX) $^ -o $@ $(LDFLAGS) $(LDLIBS)
+test_alignment: ${GTEST_OBJECTS} ${PBDAGCON_OBJECTS} AlignmentTest.o
+	@echo ${BUILDMSG}
+	${CXX} $^ -o $@ ${LDFLAGS} ${LDLIBS}
 
-test_simple_aligner: $(GTEST_OBJECTS) $(PBDAGCON_OBJECTS) SimpleAlignerTest.o
-	@echo $(BUILDMSG)
-	$(CXX) $^ -o $@ $(LDFLAGS) $(LDLIBS)
+test_simple_aligner: ${GTEST_OBJECTS} ${PBDAGCON_OBJECTS} SimpleAlignerTest.o
+	@echo ${BUILDMSG}
+	${CXX} $^ -o $@ ${LDFLAGS} ${LDLIBS}
 
-#$(GTEST_OBJECTS):
-#	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c ${GTEST_SRC}/$(@:.o=.cc)
+#${GTEST_OBJECTS}:
+#	${CXX} ${CPPFLAGS} ${CXXFLAGS} -c ${GTEST_SRC}/${@:.o=.cc}
 
 clean:
-	$(RM) $(SRCDIR)/*.o
-	$(RM) *.o
-	$(RM) test_*
+	${RM} ${SRCDIR}/*.o
+	${RM} *.o
+	${RM} test_*
