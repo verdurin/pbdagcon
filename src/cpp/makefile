@@ -40,7 +40,7 @@ LDLIBS+= \
 CPPFLAGS+=$(patsubst %,-I%,${INCDIRS})
 LDFLAGS+=$(patsubst %,-L %,${LIBDIRS})
 
-all: pbdagcon
+all: pbdagcon dazcon
 
 # Technically does not need pbdata or blasr, but so what?
 dazcon: $(COMMON_OBJECTS) $(DAZCON_OBJECTS)

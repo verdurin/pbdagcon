@@ -56,15 +56,15 @@ DAZCON_OBJECTS := DB.o align.o Alignment.o \
 
 PBDAGCON_OBJECTS := AlnGraphBoost.o Alignment.o \
 					SimpleAligner.o
-pbdagcon_testexes :=    test_alngraph \
-                        test_alignment \
-                        test_simple_aligner \
+pbdagcon_testexes :=    test-alngraph \
+                        test-alignment \
+                        test-simple_aligner \
                         ${null}
-dazcon_testexes :=    test_target_hit \
-                      test_target \
+dazcon_testexes :=    test-target_hit \
+                      test-target \
                       ${null}
 # Remove the test from the broken_testexes variable, once fixed.
-broken_testexes := test_target \
+broken_testexes := test-target \
                    ${null}
 testexes := ${pbdagcon_testexes} ${dazcon_testexes}
 # Remove broken tests exes from the testexes list
@@ -89,31 +89,17 @@ xml:
 
 %-gtestrun: % | xml
 	LD_LIBRARY_PATH=${ldp} PBDAGCON_TEST_DATA_DIR=${THISDIR} ./$< --gtest_output=xml:xml/${<F}.xml
-
-# dazcon  test executables:
-test_target_hit: ${GTEST_OBJECTS} ${DAZCON_OBJECTS} TargetHitTest.o
-	@echo ${BUILDMSG}
-	${CXX} $^ -o $@ -lpthread
-
-test_target: ${GTEST_OBJECTS} ${DAZCON_OBJECTS} TargetTest.o
-	@echo ${BUILDMSG}
-	${CXX} $^ -o $@ -lpthread
-
-# pbdagcon test executables:
-test_alngraph: ${GTEST_OBJECTS} ${PBDAGCON_OBJECTS} AlnGraphBoostTest.o
-	@echo ${BUILDMSG}
+test-%:
 	${CXX} -o $@ $^ ${LDFLAGS} ${LDLIBS}
 
-test_alignment: ${GTEST_OBJECTS} ${PBDAGCON_OBJECTS} AlignmentTest.o
-	@echo ${BUILDMSG}
-	${CXX} $^ -o $@ ${LDFLAGS} ${LDLIBS}
+# dazcon  test executables:
+test-target_hit: ${GTEST_OBJECTS} ${DAZCON_OBJECTS} TargetHitTest.o
+test-target: ${GTEST_OBJECTS} ${DAZCON_OBJECTS} TargetTest.o
 
-test_simple_aligner: ${GTEST_OBJECTS} ${PBDAGCON_OBJECTS} SimpleAlignerTest.o
-	@echo ${BUILDMSG}
-	${CXX} $^ -o $@ ${LDFLAGS} ${LDLIBS}
-
-#${GTEST_OBJECTS}:
-#	${CXX} ${CPPFLAGS} ${CXXFLAGS} -c ${GTEST_SRC}/${@:.o=.cc}
+# pbdagcon test executables:
+test-alngraph: ${GTEST_OBJECTS} ${PBDAGCON_OBJECTS} AlnGraphBoostTest.o
+test-alignment: ${GTEST_OBJECTS} ${PBDAGCON_OBJECTS} AlignmentTest.o
+test-simple_aligner: ${GTEST_OBJECTS} ${PBDAGCON_OBJECTS} SimpleAlignerTest.o
 
 clean:
 	${RM} ${SRCDIR}/*.o
