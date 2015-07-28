@@ -574,7 +574,7 @@ void Trim_DB(HITS_DB *db)
     char  *anno, *data;
 
     size = record->size;
-    data = (char *) record->data; 
+    data = (char *) record->data;
     if (data == NULL)
     { anno = (char *) record->anno;
       j = 0;
@@ -626,7 +626,7 @@ void Trim_DB(HITS_DB *db)
           reads[j++] = reads[i];
         }
     }
-  
+
   db->totlen  = totlen;
   db->maxlen  = maxlen;
   db->nreads  = j;
@@ -636,7 +636,7 @@ void Trim_DB(HITS_DB *db)
     db->reads = Realloc(reads,sizeof(HITS_READ)*(j+1),NULL);
 }
 
-// Shut down an open 'db' by freeing all associated space, including tracks and QV structures, 
+// Shut down an open 'db' by freeing all associated space, including tracks and QV structures,
 //   and any open file pointers.  The record pointed at by db however remains (the user
 //   supplied it and so should free it).
 
@@ -668,7 +668,7 @@ void Close_DB(HITS_DB *db)
 //     1: Track is for trimmed DB
 //     0: Track is for untrimmed DB
 //    -1: Track is not the right size of DB either trimmed or untrimmed
-//    -2: Could not find the track 
+//    -2: Could not find the track
 
 int Check_Track(HITS_DB *db, char *track)
 { FILE       *afile;

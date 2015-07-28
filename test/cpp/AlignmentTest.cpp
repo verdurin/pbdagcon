@@ -33,10 +33,10 @@ TEST(Alignment, Normalize) {
     b = normalizeGaps(b);
     EXPECT_EQ("CCG--T", b.qstr);
     EXPECT_EQ("CCGACT", b.tstr);
-    
+
     // another gap reference push
-    a.tstr = "ATATTA---GGC"; 
-    a.qstr = "ATAT-AGCCGGC"; 
+    a.tstr = "ATATTA---GGC";
+    a.qstr = "ATAT-AGCCGGC";
 
     b = a;
     b = normalizeGaps(b);

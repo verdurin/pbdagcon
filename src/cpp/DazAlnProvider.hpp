@@ -60,8 +60,8 @@ struct Record {
     Record() {}
     ~Record() {}
 
-    Record(Record &&o) noexcept : 
-        ovl(std::move(o.ovl)), 
+    Record(Record &&o) noexcept :
+        ovl(std::move(o.ovl)),
         trace(std::move(o.trace)) {
         o.ovl.path.trace = NULL;
     }
@@ -87,7 +87,7 @@ struct Record {
 };
 
 // Holds information for all the a,b overlaps in a particular direction,
-// either forward or reverse. Overlaps for a particular a,b,strand 
+// either forward or reverse. Overlaps for a particular a,b,strand
 // combination may come in as multiple overlaps.  This class allows us to
 // handle them as a unit.
 class TargetHit {
@@ -137,7 +137,7 @@ public:
     // a 'proper' overlap (more stringent).
     void firstRecord(Record& rec, bool proper=false);
 
-    // Adds the next overlap record to this target, possibly scoring as 
+    // Adds the next overlap record to this target, possibly scoring as
     // a 'proper' overlap (more stringent).
     void addRecord(Record& rec, bool proper=false);
 
@@ -150,7 +150,7 @@ public:
     int id;
 
     // Length of the target
-    int length; 
+    int length;
 
     std::vector<TargetHit> hits;
 
@@ -165,7 +165,7 @@ private:
 
 ///
 /// Provides sets of alignments for a given target sequence from a daligner
-/// output file.  
+/// output file.
 ///
 class DazAlnProvider : public AlnProvider {
 public:
@@ -193,7 +193,7 @@ private:
     Target* trg_;
     const ProgramOpts popts_;
 
-    // Dazzler-related data 
+    // Dazzler-related data
     HITS_DB db_;
     int64 novl_, covl_;
     int tbytes_;
@@ -207,10 +207,10 @@ private:
 
 
 /// Compares the hits based on (percent id) x (query alignment length)
-bool cmpHitOvlScore(const TargetHit& l, const TargetHit& r); 
+bool cmpHitOvlScore(const TargetHit& l, const TargetHit& r);
 
 /// Compares based on coverage score
-bool cmpHitCovScore(const TargetHit& l, const TargetHit& r); 
+bool cmpHitCovScore(const TargetHit& l, const TargetHit& r);
 
 float invertedSum(float x, unsigned int y);
 

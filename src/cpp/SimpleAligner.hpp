@@ -62,7 +62,7 @@ struct Config {
 class SimpleAligner {
 public:
     SimpleAligner();
-    void align(dagcon::Alignment& aln); 
+    void align(dagcon::Alignment& aln);
     void operator() (dagcon::Alignment& aln);
 private:
     Aligner::Config config_;

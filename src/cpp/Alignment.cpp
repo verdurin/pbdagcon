@@ -53,27 +53,27 @@ std::string revComp(std::string& seq) {
     std::string::iterator curr = seq.begin();
     for (; curr != seq.end(); ++curr) {
         char& c = *curr;
-        c = c == 'T' ? bases[0] : 
+        c = c == 'T' ? bases[0] :
             c == 'G' ? bases[1] :
-            c == 'A' ? bases[2] : 
+            c == 'A' ? bases[2] :
             c == 'C' ? bases[3] : c;
     }
     return std::string(seq.rbegin(), seq.rend());
 }
 
 // Set this to false if the alignments are grouped by query.  The parse
-// routine will be adjusted to build the alignment graph based on the 
-// queries. 
+// routine will be adjusted to build the alignment graph based on the
+// queries.
 bool Alignment::groupByTarget = true;
 
-Alignment::Alignment() : 
-    tlen(0), 
-    start(0), 
-    end(0), 
-    id(""), 
-    sid(""), 
-    strand('+'), 
-    qstr(""), 
+Alignment::Alignment() :
+    tlen(0),
+    start(0),
+    end(0),
+    id(""),
+    sid(""),
+    strand('+'),
+    qstr(""),
     tstr("") { }
 
 // Parses blasr m5 output grouped either by target or query.
@@ -91,11 +91,11 @@ void parseM5(std::istream& stream, Alignment* aln) {
     // avoids *some* empty lines
     if (fields.size() == 0) return;
 
-    // base query id (without the last '/<coordinates>'), allows us to 
+    // base query id (without the last '/<coordinates>'), allows us to
     // group properly by query when asked.
     std::string baseQid = fields[0].substr(0,fields[0].find_last_of("/"));
     aln->sid = fields[0];
-    aln->id = Alignment::groupByTarget ? fields[5] : baseQid; 
+    aln->id = Alignment::groupByTarget ? fields[5] : baseQid;
 
     std::istringstream ssLen(Alignment::groupByTarget ? fields[6] : fields[1]);
     ssLen >> aln->tlen;

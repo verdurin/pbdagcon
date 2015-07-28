@@ -39,7 +39,7 @@
 
 #include <stdint.h>
 
-/// 
+///
 /// Super-simple alignment representation.  Represents an alignment between two
 /// PacBio reads, one of which we're trying to correct.  The read to correct
 /// may be either the target or the query, depending on how the alignment was
@@ -55,7 +55,7 @@ public:
 
     // length of the sequence we are trying to correct
     uint32_t tlen;
-    
+
     // conforming offsets are 1-based
     uint32_t start;
 
@@ -65,7 +65,7 @@ public:
     std::string id;
 
     // ID of the supporting read (query)
-    std::string sid; 
+    std::string sid;
 
     char strand;
 
@@ -87,7 +87,7 @@ void parseM5(std::istream& stream, dagcon::Alignment* aln);
 void parsePre(std::istream& stream, dagcon::Alignment* aln);
 
 /// Simplifies the alignment by normalizing gaps.  Converts mismatches into
-/// indels ... 
+/// indels ...
 ///      query: CAC        query:  C-AC
 ///             | |  --->          |  |
 ///     target: CGC       target:  CG-C
@@ -100,13 +100,13 @@ void parsePre(std::istream& stream, dagcon::Alignment* aln);
 /// Shifts equivalent gaps to the right in the read ...
 ///      query: -C--CGT       query: CCG--T
 ///              |  | |  --->        |||  |
-///     target: CCGAC-T      target: CCGACT  
-/// Allow optional gap pushing, some aligners may not need it and I'd like 
+///     target: CCGAC-T      target: CCGACT
+/// Allow optional gap pushing, some aligners may not need it and I'd like
 /// to get rid of it anyway.
 dagcon::Alignment normalizeGaps(dagcon::Alignment& aln, bool push=true);
 
 void trimAln(dagcon::Alignment& aln, int trimLen=50);
 
-std::string revComp(std::string& seq); 
+std::string revComp(std::string& seq);
 
 #endif // __GCON_ALIGNMENT_HPP__

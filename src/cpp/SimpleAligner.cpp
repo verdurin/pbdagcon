@@ -72,7 +72,7 @@ void SimpleAligner::align(dagcon::Alignment& aln) {
              config_.sdpIndel, config_.sdpIndel, config_.indelRate*2,
              initialAln, Local);
 
-    GuidedAlign(query, target, initialAln, distScoreFn_, 
+    GuidedAlign(query, target, initialAln, distScoreFn_,
         config_.bandSize, refinedAln);
 
     std::string queryStr, alignStr, targetStr;
@@ -80,7 +80,7 @@ void SimpleAligner::align(dagcon::Alignment& aln) {
     //StickPrintAlignment(initialAln, query, target, std::cout);
     //StickPrintAlignment(refinedAln, query, target, std::cout);
 
-    CreateAlignmentStrings(refinedAln, query.seq, target.seq, 
+    CreateAlignmentStrings(refinedAln, query.seq, target.seq,
             targetStr, alignStr, queryStr, query.length, target.length);
 
     // alignment coordinates may change, update alignment object

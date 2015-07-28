@@ -103,7 +103,7 @@ typedef struct            //  Hidden from the user, working space for each threa
 
 Work_Data *New_Work_Data()
 { _Work_Data *work;
-  
+
   work = (_Work_Data *) Malloc(sizeof(_Work_Data),"Allocating work data block");
   if (work == NULL)
     exit (1);
@@ -200,7 +200,7 @@ typedef struct
     int16 *score;
     int16 *table;
   } _Align_Spec;
- 
+
 /* Fill in bit table: TABLE[x] = 1 iff the alignment modeled by x (1 = match, 0 = mismatch)
      has a non-negative score for every suffix of the alignment under the scoring scheme
      where match = MATCH and mismatch = -1.  MATCH is set so that an alignment with TRIM_PCT
@@ -509,7 +509,7 @@ static int forward_wave(_Work_Data *work, _Align_Spec *spec,
               }
             d = a[y];
             if (c != d)
-              { if (d == 4) 
+              { if (d == 4)
                   { more  = 0;
                     aclip = k;
                   }
@@ -663,7 +663,7 @@ static int forward_wave(_Work_Data *work, _Align_Spec *spec,
             else
               { c  = am+1;
                 m  = M[d];
-                b  = T[d]; 
+                b  = T[d];
                 ha = HA[d];
                 hb = HB[d];
               }
@@ -698,7 +698,7 @@ static int forward_wave(_Work_Data *work, _Align_Spec *spec,
                 }
               d = a[y];
               if (c != d)
-                { if (d == 4) 
+                { if (d == 4)
                     { more  = 0;
                       aclip = k;
                     }
@@ -820,7 +820,7 @@ static int forward_wave(_Work_Data *work, _Align_Spec *spec,
       n = besta - WAVE_LAG;
       while (hgh >= low)
         if (V[hgh] < n)
-          hgh -= 1;                               
+          hgh -= 1;
         else
           { while (V[low] < n)
               low += 1;
@@ -863,7 +863,7 @@ static int forward_wave(_Work_Data *work, _Align_Spec *spec,
 
     a = -1;
     for (h = trimha; h >= 0; h = b)
-      { b = cells[h].ptr; 
+      { b = cells[h].ptr;
         cells[h].ptr = a;
         a = h;
       }
@@ -937,7 +937,7 @@ static int forward_wave(_Work_Data *work, _Align_Spec *spec,
 
     a = -1;
     for (h = trimhb; h >= 0; h = b)
-      { b = cells[h].ptr; 
+      { b = cells[h].ptr;
         cells[h].ptr = a;
         a = h;
       }
@@ -957,7 +957,7 @@ static int forward_wave(_Work_Data *work, _Align_Spec *spec,
         a = cells[h].mark + k;
         d = cells[h].diff;
         btrace[btlen++] = (uint16) (d-e);
-        btrace[btlen++] = (uint16) (a-b);  
+        btrace[btlen++] = (uint16) (a-b);
 #ifdef SHOW_TRAIL
         printf("     %4d: (%5d,%5d): %3d / %3d\n",h,a,a-k,d-e,a-b); fflush(stdout);
 #endif
@@ -966,7 +966,7 @@ static int forward_wave(_Work_Data *work, _Align_Spec *spec,
       }
     if (b-k != trimy)
       { btrace[btlen++] = (uint16) (trimd-e);
-        btrace[btlen++] = (uint16) (trimx-b);  
+        btrace[btlen++] = (uint16) (trimx-b);
 #ifdef SHOW_TRAIL
         printf("           (%5d,%5d): %3d / %3d\n",trimx,trimy,trimd-e,trimx-b); fflush(stdout);
 #endif
@@ -1185,7 +1185,7 @@ static void reverse_wave(_Work_Data *work, _Align_Spec *spec,
               }
             d = a[y];
             if (c != d)
-              { if (d == 4) 
+              { if (d == 4)
                   { more  = 0;
                     aclip = k;
                   }
@@ -1301,7 +1301,7 @@ static void reverse_wave(_Work_Data *work, _Align_Spec *spec,
           V[low]  = ap = INT32_MAX;
         }
       else
-        ap = V[low]; 
+        ap = V[low];
       if (hgh < maxp)
         { hgh += 1;
           NA[hgh] = NA[hgh-1];
@@ -1372,7 +1372,7 @@ static void reverse_wave(_Work_Data *work, _Align_Spec *spec,
                 }
               d = a[y];
               if (c != d)
-                { if (d == 4) 
+                { if (d == 4)
                     { more  = 0;
                       aclip = k;
                     }
@@ -1493,7 +1493,7 @@ static void reverse_wave(_Work_Data *work, _Align_Spec *spec,
       n = besta + WAVE_LAG;
       while (hgh >= low)
         if (V[hgh] > n)
-          hgh -= 1;                               
+          hgh -= 1;
         else
           { while (V[low] > n)
               low += 1;
@@ -1536,7 +1536,7 @@ static void reverse_wave(_Work_Data *work, _Align_Spec *spec,
 
     a = -1;
     for (h = trimha; h >= 0; h = b)
-      { b = cells[h].ptr; 
+      { b = cells[h].ptr;
         cells[h].ptr = a;
         a = h;
       }
@@ -1656,7 +1656,7 @@ static void reverse_wave(_Work_Data *work, _Align_Spec *spec,
 
     a = -1;
     for (h = trimhb; h >= 0; h = b)
-      { b = cells[h].ptr; 
+      { b = cells[h].ptr;
         cells[h].ptr = a;
         a = h;
       }
@@ -1675,7 +1675,7 @@ static void reverse_wave(_Work_Data *work, _Align_Spec *spec,
         if (h < 0)
           { a = trimx;
             d = trimd;
-          } 
+          }
         else
           { k = cells[h].diag;
             a = cells[h].mark + k;
@@ -2048,17 +2048,17 @@ void Print_Overlap(FILE *output, Overlap *ovl, int tbytes, int indent)
 }
 
 int Check_Trace_Points(Overlap *ovl, int tspace, int verbose, char *fname)
-{ int     i, p; 
+{ int     i, p;
 
 #ifdef DELTAS
   if (((ovl->path.aepos-1)/tspace - ovl->path.abpos/tspace)*2 != ovl->path.tlen-2)
 #else
   if ((ovl->path.aepos-1)/tspace - ovl->path.abpos/tspace != ovl->path.tlen-1)
 #endif
-    { if (verbose) 
+    { if (verbose)
         fprintf(stderr,"  %s: Wrong number of trace points\n",fname);
       return (1);
-    }         
+    }
   p = ovl->path.bbpos;
   if (tspace <= TRACE_XOVR)
     { uint8 *trace8 = (uint8 *) ovl->path.trace;
@@ -2069,7 +2069,7 @@ int Check_Trace_Points(Overlap *ovl, int tspace, int verbose, char *fname)
 #endif
         p += trace8[i];
     }
-  else      
+  else
     { uint16 *trace16 = (uint16 *) ovl->path.trace;
 #ifdef DELTAS
       for (i = 1; i < ovl->path.tlen; i += 2)
@@ -2081,8 +2081,8 @@ int Check_Trace_Points(Overlap *ovl, int tspace, int verbose, char *fname)
   if (p != ovl->path.bepos)
     { if (verbose)
         fprintf(stderr,"  %s: Trace point sum != aligned interval\n",fname);
-      return (1); 
-    }         
+      return (1);
+    }
   return (0);
 }
 
@@ -2927,7 +2927,7 @@ static int dandc_nd(char *A, int M, char *B, int N, Trace_Waves *wave)
             else
               while (y < x && B[y] == a[y])
                 y += 1;
-            
+
             VF[k] = y;
             a -= 1;
             x += 1;
@@ -3002,7 +3002,7 @@ OVERLAP2:
   fflush(stdout);
 #endif
   if (D > 1)
-    { 
+    {
 #ifdef DEBUG_ALIGN
       depth += 2;
 #endif
@@ -3061,7 +3061,7 @@ static void Compute_Trace_ND_ALL(Alignment *align, Work_Data *ework)
   D = 2*(path->diffs + 4)*sizeof(int);
   if (D > work->vecmax)
     enlarge_vector(work,D);
-  
+
   D = (path->diffs+3)/2;
   wave.VF = ((int *) work->vector) + (D+1);
   wave.VB = wave.VF + (2*D+1);
@@ -3095,7 +3095,7 @@ static int ToA[4] = { 'a', 'c', 'g', 't' };
 #endif
 
 static int iter_np(char *A, int M, char *B, int N, Trace_Waves *wave)
-{ int  **PVF = wave->PVF; 
+{ int  **PVF = wave->PVF;
   int  **PHF = wave->PHF;
   int    D;
   int    del = M-N;
@@ -3341,7 +3341,7 @@ static int iter_np(char *A, int M, char *B, int N, Trace_Waves *wave)
 }
 
 static int middle_np(char *A, int M, char *B, int N, Trace_Waves *wave)
-{ int  **PVF = wave->PVF; 
+{ int  **PVF = wave->PVF;
   int  **PHF = wave->PHF;
   int    D;
   int    del = M-N;
@@ -3532,7 +3532,7 @@ void Compute_Trace_ALL(Alignment *align, Work_Data *ework)
 
   M = path->aepos-path->abpos;
   N = path->bepos-path->bbpos;
-  
+
   { int64 s;
     int   d;
     int   dmax;
@@ -3770,10 +3770,10 @@ void Compute_Trace_MID(Alignment *align, Work_Data *ework, int trace_spacing)
     bb = bs = bf = path->bbpos;
 #ifdef DELTAS
     tlen -= 2;
-    for (i = 1; i < tlen; i += 2) 
+    for (i = 1; i < tlen; i += 2)
 #else
     tlen -= 1;
-    for (i = 0; i < tlen; i++) 
+    for (i = 0; i < tlen; i++)
 #endif
       { ae = ae + trace_spacing;
         be = bb + points[i];

@@ -54,8 +54,8 @@ AlnGraphBoost::AlnGraphBoost(const std::string& backbone) {
     // vertex
     size_t blen = backbone.length();
     _g = G(blen+1);
-    for (size_t i = 0; i < blen+1; i++) 
-        boost::add_edge(i, i+1, _g); 
+    for (size_t i = 0; i < blen+1; i++)
+        boost::add_edge(i, i+1, _g);
 
     VtxIter curr, last;
     boost::tie(curr, last) = boost::vertices(_g);
@@ -76,8 +76,8 @@ AlnGraphBoost::AlnGraphBoost(const std::string& backbone) {
 
 AlnGraphBoost::AlnGraphBoost(const size_t blen) {
     _g = G(blen+1);
-    for (size_t i = 0; i < blen+1; i++) 
-        boost::add_edge(i, i+1, _g); 
+    for (size_t i = 0; i < blen+1; i++)
+        boost::add_edge(i, i+1, _g);
 
     VtxIter curr, last;
     boost::tie(curr, last) = boost::vertices(_g);
@@ -162,7 +162,7 @@ void AlnGraphBoost::addEdge(VtxDesc u, VtxDesc v) {
 
 void AlnGraphBoost::mergeNodes() {
     std::queue<VtxDesc> seedNodes;
-    seedNodes.push(_enterVtx); 
+    seedNodes.push(_enterVtx);
 
     while(true) {
         if (seedNodes.size() == 0)
@@ -184,7 +184,7 @@ void AlnGraphBoost::mergeNodes() {
                 if (_g[*ii].visited == false)
                     notVisited++;
             }
-            
+
             // move onto the boost::target node after we visit all incoming edges for
             // the boost::target node
             if (notVisited == 0)
@@ -194,7 +194,7 @@ void AlnGraphBoost::mergeNodes() {
 }
 
 void AlnGraphBoost::mergeInNodes(VtxDesc n) {
-    std::map<char, std::vector<VtxDesc>> nodeGroups;     
+    std::map<char, std::vector<VtxDesc>> nodeGroups;
     InEdgeIter ii, ie;
     // Group neighboring nodes by base
     for(boost::tie(ii, ie) = boost::in_edges(n, _g); ii != ie; ++ii) {
@@ -203,23 +203,23 @@ void AlnGraphBoost::mergeInNodes(VtxDesc n) {
             nodeGroups[_g[inNode].base].push_back(inNode);
         }
     }
-    
+
     // iterate over node groups, merge an accumulate information
     for(auto kvp = nodeGroups.cbegin(); kvp != nodeGroups.end(); ++kvp) {
         std::vector<VtxDesc> nodes = (*kvp).second;
-        if (nodes.size() <= 1) 
+        if (nodes.size() <= 1)
             continue;
 
         std::vector<VtxDesc>::const_iterator ni = nodes.cbegin();
-        VtxDesc an = *ni++; 
+        VtxDesc an = *ni++;
         OutEdgeIter anoi, anoe;
         boost::tie(anoi, anoe) = boost::out_edges(an, _g);
-        
+
         // Accumulate out edge information
         for (; ni != nodes.cend(); ++ni) {
             OutEdgeIter oi, oe;
             boost::tie(oi, oe) = boost::out_edges(*ni, _g);
-            _g[*anoi].count += _g[*oi].count;    
+            _g[*anoi].count += _g[*oi].count;
             _g[an].weight += _g[*ni].weight;
         }
 
@@ -249,7 +249,7 @@ void AlnGraphBoost::mergeInNodes(VtxDesc n) {
 }
 
 void AlnGraphBoost::mergeOutNodes(VtxDesc n) {
-    std::map<char, std::vector<VtxDesc>> nodeGroups;     
+    std::map<char, std::vector<VtxDesc>> nodeGroups;
     OutEdgeIter oi, oe;
     for(boost::tie(oi, oe) = boost::out_edges(n, _g); oi != oe; ++oi) {
         VtxDesc outNode = boost::target(*oi, _g);
@@ -257,22 +257,22 @@ void AlnGraphBoost::mergeOutNodes(VtxDesc n) {
             nodeGroups[_g[outNode].base].push_back(outNode);
         }
     }
-    
+
     for(auto kvp = nodeGroups.cbegin(); kvp != nodeGroups.end(); ++kvp) {
         std::vector<VtxDesc> nodes = (*kvp).second;
-        if (nodes.size() <= 1) 
+        if (nodes.size() <= 1)
             continue;
 
         std::vector<VtxDesc>::const_iterator ni = nodes.cbegin();
         VtxDesc an = *ni++;
         InEdgeIter anii, anie;
         boost::tie(anii, anie) = boost::in_edges(an, _g);
-        
+
         // Accumulate inner edge information
         for (; ni != nodes.cend(); ++ni) {
             InEdgeIter ii, ie;
             boost::tie(ii, ie) = boost::in_edges(*ni, _g);
-            _g[*anii].count += _g[*ii].count;    
+            _g[*anii].count += _g[*ii].count;
             _g[an].weight += _g[*ni].weight;
         }
 
@@ -329,9 +329,9 @@ const std::string AlnGraphBoost::consensus(int minWeight) {
     std::vector<AlnNode>::iterator curr = path.begin();
     for (; curr != path.end(); ++curr) {
         AlnNode n = *curr;
-        if (n.base == _g[_enterVtx].base || n.base == _g[_exitVtx].base) 
+        if (n.base == _g[_enterVtx].base || n.base == _g[_exitVtx].base)
             continue;
-        
+
         cns += n.base;
 
         // initial beginning of minimum weight section
@@ -340,7 +340,7 @@ const std::string AlnGraphBoost::consensus(int minWeight) {
             metWeight = true;
         } else if (metWeight && n.weight < minWeight) {
         // concluded minimum weight section, update if longest seen so far
-            if ((idx - offs) > length) { 
+            if ((idx - offs) > length) {
                 bestOffs = offs;
                 length = idx - offs;
             }
@@ -354,7 +354,7 @@ const std::string AlnGraphBoost::consensus(int minWeight) {
         bestOffs = offs;
         length = idx - offs;
     }
-    
+
     return cns.substr(bestOffs, length);
 }
 
@@ -373,9 +373,9 @@ void AlnGraphBoost::consensus(std::vector<CnsResult>& seqs, int minWeight, size_
     std::vector<AlnNode>::iterator curr = path.begin();
     for (; curr != path.end(); ++curr) {
         AlnNode n = *curr;
-        if (n.base == _g[_enterVtx].base || n.base == _g[_exitVtx].base) 
+        if (n.base == _g[_enterVtx].base || n.base == _g[_exitVtx].base)
             continue;
-        
+
         cns += n.base;
 
         // initial beginning of minimum weight section
@@ -425,10 +425,10 @@ const std::vector<AlnNode> AlnGraphBoost::bestPath() {
 
         VtxDesc n = seedNodes.front();
         seedNodes.pop();
-        
+
         bool bestEdgeFound = false;
         float bestScore = -FLT_MAX;
-        EdgeDesc bestEdgeD = boost::initialized_value; 
+        EdgeDesc bestEdgeD = boost::initialized_value;
         OutEdgeIter oi, oe;
         for(boost::tie(oi, oe) = boost::out_edges(n, _g); oi != oe; ++oi) {
             EdgeDesc outEdgeD = *oi;
@@ -445,10 +445,10 @@ const std::vector<AlnNode> AlnGraphBoost::bestPath() {
             if (newScore > bestScore) {
                 bestScore = newScore;
                 bestEdgeD = outEdgeD;
-                bestEdgeFound = true; 
+                bestEdgeFound = true;
             }
         }
-        
+
         if (bestEdgeFound) {
             nodeScore[n]= bestScore;
             bestNodeScoreEdge[n] = bestEdgeD;
@@ -465,7 +465,7 @@ const std::vector<AlnNode> AlnGraphBoost::bestPath() {
                 if (_g[*oi].visited == false)
                     notVisited++;
             }
-            
+
             // move onto the target node after we visit all incoming edges for
             // the target node
             if (notVisited == 0)
@@ -494,7 +494,7 @@ const std::vector<AlnNode> AlnGraphBoost::bestPath() {
 
 void AlnGraphBoost::printGraph() {
     reapNodes();
-    boost::write_graphviz(std::cout, _g, 
+    boost::write_graphviz(std::cout, _g,
         make_label_writer(get(&AlnNode::base, _g)),
         make_label_writer(get(&AlnEdge::count, _g)));
 }
@@ -506,11 +506,11 @@ bool AlnGraphBoost::danglingNodes() {
     for (;curr != last; ++curr) {
         if (_g[*curr].deleted)
             continue;
-        if (_g[*curr].base == _g[_enterVtx].base || _g[*curr].base == _g[_exitVtx].base) 
+        if (_g[*curr].base == _g[_enterVtx].base || _g[*curr].base == _g[_exitVtx].base)
             continue;
 
-        int indeg = out_degree(*curr, _g); 
-        int outdeg = in_degree(*curr, _g); 
+        int indeg = out_degree(*curr, _g);
+        int outdeg = in_degree(*curr, _g);
         if (outdeg > 0 && indeg > 0) continue;
 
         found = true;

@@ -51,7 +51,7 @@ namespace DagCon {
             return desc_;
         }
     private:
-        const char* desc_; 
+        const char* desc_;
     };
 
     class MemoryException : public std::exception {
@@ -75,9 +75,9 @@ public:
     /// \return True if there are more targets, otherwise false.
     virtual bool nextTarget(std::vector<dagcon::Alignment>& dest) = 0;
 
-    /// Same as nextTarget(dest), except it also returns the target sequence we are 
+    /// Same as nextTarget(dest), except it also returns the target sequence we are
     /// going to correct.
-    virtual bool nextTarget(std::string& targSeq, std::vector<dagcon::Alignment>& dest) = 0; 
+    virtual bool nextTarget(std::string& targSeq, std::vector<dagcon::Alignment>& dest) = 0;
 
     virtual ~AlnProvider() {};
 };

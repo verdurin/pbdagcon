@@ -54,10 +54,10 @@ namespace M5Exception {
 }
 
 ///
-/// Provides sets of alignments for a given target sequence from a blasr M5 
+/// Provides sets of alignments for a given target sequence from a blasr M5
 /// file.  File may be grouped by target or query.  The grouping determines
 /// which set gets corrected.  Earlier, pre-assembly reads were corrected as
-/// targets.  However, we can avoid the sort step if we can correct the reads 
+/// targets.  However, we can avoid the sort step if we can correct the reads
 /// as queries, since blasr groups alignments by query.
 ///
 class BlasrM5AlnProvider : public AlnProvider {
@@ -71,7 +71,7 @@ public:
     /// are actually made on the validity of the format, caveat emptor. This
     /// can be used to take a piped stream of alignments straight from blasr.
     BlasrM5AlnProvider(std::istream* stream);
-    
+
     /// Cleans up some stuff.
     ~BlasrM5AlnProvider();
 
@@ -81,11 +81,11 @@ public:
     /// \param dest reference to a vector to hold the alignments.
     /// \return True if there are more targets, otherwise false.
     bool nextTarget(std::vector<dagcon::Alignment>& dest);
-    
+
     /// Same as \fn bool nextTarget(std::vector<dagcon::Alignment>& dest) except it
     /// also returns the target sequence we are going to correct.
     bool nextTarget(std::string& targetSeq, std::vector<dagcon::Alignment>& dest);
-    
+
     /// Called during constructor, checks that the file is formatted correctly.
     /// Also determines if the input is grouped by query or target.
     void checkFormat();
@@ -94,11 +94,11 @@ private:
     /// Path to the input file
     const std::string fpath_;
 
-    /// State variables 
+    /// State variables
     std::string currId_;
     dagcon::Alignment prevAln_;
     bool firstAln_;
-    
+
     /// Represents an input stream to the alignments.
     std::ifstream fs_;
     std::istream* is_;

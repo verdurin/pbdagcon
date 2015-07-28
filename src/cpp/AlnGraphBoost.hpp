@@ -38,25 +38,25 @@
 #define __GCON_ALNGRAPHBOOST_HPP__
 
 /// Alignment graph representation and consensus caller.  Based on the original
-/// Python implementation, pbdagcon.  This class is modelled after its 
+/// Python implementation, pbdagcon.  This class is modelled after its
 /// aligngraph.py component, which accumulates alignment information into a
 /// partial-order graph and then calls consensus.  Used to error-correct pacbio
-/// on pacbio reads. 
+/// on pacbio reads.
 ///
 /// Implemented using the boost graph library.
 
-// forward declaration 
+// forward declaration
 //struct Alignment;
 
 // this allows me to forward-declare properties with graph descriptors as
-// members types 
+// members types
 typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::bidirectionalS> graphTraits;
 
-/// Graph vertex property. An alignment node, which represents one base position 
+/// Graph vertex property. An alignment node, which represents one base position
 /// in the alignment graph.
 struct AlnNode {
     char base; ///< DNA base: [ACTG]
-    int coverage; ///< Number of reads align to this position, but not 
+    int coverage; ///< Number of reads align to this position, but not
                   ///< necessarily match
     int weight; ///< Number of reads that align to this node *with the same base*, but not
                 ///< necessarily represented in the target.
@@ -69,7 +69,7 @@ struct AlnNode {
         coverage = 0;
         weight = 0;
         backbone = false;
-        deleted = false; 
+        deleted = false;
     }
 };
 
@@ -94,7 +94,7 @@ typedef boost::graph_traits<G>::in_edge_iterator InEdgeIter;
 typedef boost::graph_traits<G>::out_edge_iterator OutEdgeIter;
 typedef boost::property_map<G, boost::vertex_index_t>::type IndexMap;
 
-/// 
+///
 /// Simple consensus interface datastructure
 ///
 struct CnsResult {
@@ -102,7 +102,7 @@ struct CnsResult {
     std::string seq; ///< Consensus fragment
 };
 
-/// 
+///
 /// Core alignments into consensus algorithm, implemented using the boost graph
 /// library.  Takes a set of alignments to a reference and builds a higher
 /// accuracy (~ 99.9) consensus sequence from it.  Designed for use in the HGAP
@@ -129,7 +129,7 @@ public:
     /// \param v the 'to' vertex descriptor
     void addEdge(VtxDesc u, VtxDesc v);
 
-    /// Collapses degenerate nodes (vertices).  Must be called before 
+    /// Collapses degenerate nodes (vertices).  Must be called before
     /// consensus(). Calls mergeInNodes() followed by mergeOutNodes().
     void mergeNodes();
 
@@ -145,14 +145,14 @@ public:
     /// \param n the node to remove.
     void markForReaper(VtxDesc n);
 
-    /// Removes the set of nodes that have been marked.  Modifies graph.  
+    /// Removes the set of nodes that have been marked.  Modifies graph.
     /// Prohibitively expensive when using vecS as the vertex container.
     void reapNodes();
 
     /// Generates the consensus from the graph.  Must be called after
     /// mergeNodes(). Returns the longest contiguous consensus sequence where
     /// each base meets the minimum weight requirement.
-    /// \param minWeight sets the minimum weight for each base in the consensus. 
+    /// \param minWeight sets the minimum weight for each base in the consensus.
     ///        default = 0
     const std::string consensus(int minWeight=0);
 
@@ -173,7 +173,7 @@ public:
     virtual ~AlnGraphBoost();
 private:
     G _g;
-    VtxDesc _enterVtx; 
+    VtxDesc _enterVtx;
     VtxDesc _exitVtx;
     std::map<VtxDesc, VtxDesc> _bbMap;
     std::vector<VtxDesc> _reaperBag;

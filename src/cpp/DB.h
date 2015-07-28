@@ -41,7 +41,7 @@
  *    which the sequence and read information are separated into two separate files, and the
  *    sequence is compressed into 2-bits for each base.  Support for tracks of additional
  *    information, and trimming according to the current partition.  Eventually will also
- *    support compressed quality information. 
+ *    support compressed quality information.
  *
  *  Author :  Gene Myers
  *  Date   :  July 2013
@@ -200,7 +200,7 @@ typedef struct _track
   { struct _track *next;  //  Link to next track
     char          *name;  //  Symbolic name of track
     int            size;  //  Size in bytes of anno records
-    void          *anno;  //  over [0,nreads]: read i annotation: int, int64, or 'size' records 
+    void          *anno;  //  over [0,nreads]: read i annotation: int, int64, or 'size' records
     void          *data;  //     data[anno[i] .. anno[i+1]-1] is data if data != NULL
   } HITS_TRACK;
 
@@ -233,7 +233,7 @@ typedef struct
                             //    or memory pointer to uncompressed block of all sequences.
     HITS_READ  *reads;      //  Array [0..nreads] of HITS_READ
     HITS_TRACK *tracks;     //  Linked list of loaded tracks
-  } HITS_DB; 
+  } HITS_DB;
 
 
 /*******************************************************************************************

@@ -75,7 +75,7 @@ extern "C" {
 
      There are 'diffs' differences in an optimal local alignment between the beginning and
      end points of the alignment (if computed by Compute_Trace), or nearly so (if computed
-     by Local_Alignment).  
+     by Local_Alignment).
 
      Optionally, a Path can have additional information about the exact nature of the
      aligned substrings if the field 'trace' is not NULL.  Trace points to either an
@@ -298,7 +298,7 @@ typedef struct {
      accommodate the trace where each value take 'tbytes' bytes (1 if uint8 or 2 if uint16).
 
      Write_Overlap write 'ovl' to stream 'output' followed by its trace vector (if any) that
-     occupies 'tbytes' bytes per value.  
+     occupies 'tbytes' bytes per value.
 
      Print_Overlap prints an ASCII version of the contents of 'ovl' to stream 'output'
      where the trace occupes 'tbytes' per value and the print out is indented from the left

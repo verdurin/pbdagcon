@@ -53,7 +53,7 @@ IOException::IOException(const char* desc) : desc_(desc) {}
 static char ToU[8] = { 'A', 'C', 'G', 'T', '.', '[', ']', '-' };
 static int BORDER = 10;
 
-// Should write my own, but for reasons of expediency, this borrows heavily 
+// Should write my own, but for reasons of expediency, this borrows heavily
 // from LAshow.c
 DazAlnProvider::DazAlnProvider(const ProgramOpts& popts) :
     popts_(popts),
@@ -89,10 +89,10 @@ DazAlnProvider::DazAlnProvider(const ProgramOpts& popts) :
         throw IOException("Failed to read tspace");
 
     int small;
-    if (tspace <= TRACE_XOVR) { 
+    if (tspace <= TRACE_XOVR) {
         small  = 1;
         tbytes_ = sizeof(uint8);
-    } else { 
+    } else {
         small  = 0;
         tbytes_ = sizeof(uint16);
     }
@@ -130,7 +130,7 @@ bool DazAlnProvider::nextTarget(std::vector<dagcon::Alignment> &dest) {
                 trg_->getAlignments(dest, popts_.maxHits, popts_.sortCov);
                 if (dest.size() < popts_.minCov) {
                     dest.clear();
-                    skipTarget = true; 
+                    skipTarget = true;
                 }
             } else {
                 skipTarget = true;
@@ -147,12 +147,12 @@ bool DazAlnProvider::nextTarget(std::vector<dagcon::Alignment> &dest) {
         }
         trg_->addRecord(rec, popts_.properOvls);
     }
-    
+
     return covl_ != novl_;
 }
 
 bool DazAlnProvider::nextTarget(std::string& targSeq, std::vector<dagcon::Alignment>& dest) {
-     
+
     bool hasNext = nextTarget(dest);
 
     targSeq.resize(trg_->length);
@@ -162,19 +162,19 @@ bool DazAlnProvider::nextTarget(std::string& targSeq, std::vector<dagcon::Alignm
     int i;
     for (i = 0; i < trg_->length; i++)
         targSeq[i] = ToU[(int)seq[i]];
-    
+
     return hasNext;
 }
 
 void DazAlnProvider::nextRecord(Record& rec) {
     Read_Overlap(input_,&rec.ovl);
-    int tmax = ((int)1.2*rec.ovl.path.tlen) + 100; 
+    int tmax = ((int)1.2*rec.ovl.path.tlen) + 100;
     rec.trace.resize(tmax,0);
     rec.ovl.path.trace = (void *) &rec.trace.front();
     Read_Trace(input_, &rec.ovl, tbytes_);
 }
 
-TargetHit::TargetHit() : 
+TargetHit::TargetHit() :
     ovlScore(0.0f),
     covScore(0.0f),
     aread(-1),
@@ -230,15 +230,15 @@ void TargetHit::computeOvlScore(bool proper) {
         Path p = rec.ovl.path;
         ahlen += p.aepos - p.abpos;
         bhlen += p.bepos - p.bbpos;
-        diff += std::abs(ahlen - bhlen) + p.diffs; 
+        diff += std::abs(ahlen - bhlen) + p.diffs;
     }
 
     ovlScore = (1 - diff/(float)ahlen) * ahlen;
 
     if (proper) {
         const Path& f = records.front().ovl.path;
-        const Path& b = records.back().ovl.path; 
-        if (f.abpos != 0 && b.bbpos != 0) 
+        const Path& b = records.back().ovl.path;
+        if (f.abpos != 0 && b.bbpos != 0)
             ovlScore = 0.0f;
         if (f.aepos != alen && b.bepos != blen)
             ovlScore = 0.0f;
@@ -253,16 +253,16 @@ int TargetHit::aend() {
     return records.back().ovl.path.aepos;
 }
 
-// Simplify unit testing, don't burden with malloc'd 
+// Simplify unit testing, don't burden with malloc'd
 // daligner structures.
 Target::Target(): needsFree_(false) { }
 
-Target::Target(HITS_DB& db, int tspace, int small) : 
-    db_(db), 
-    tspace_(tspace), 
+Target::Target(HITS_DB& db, int tspace, int small) :
+    db_(db),
+    tspace_(tspace),
     small_(small),
     needsFree_(true) {
-    
+
     work_ = New_Work_Data();
     abuffer_ = New_Read_Buffer(&db_);
     bbuffer_ = New_Read_Buffer(&db_);
@@ -285,7 +285,7 @@ void Target::firstRecord(Record& rec, bool proper) {
 
     if (coverage_.size() < (unsigned int) length)
         coverage_.resize(length);
-   
+
     auto beg = coverage_.begin();
     std::for_each(beg, beg+length, [](unsigned int& x){x=0;});
 
@@ -360,12 +360,12 @@ void Target::getAlignments(std::vector<dagcon::Alignment> &alns, unsigned int ma
             if (amin < 0) amin = 0;
             amax = ovl.path.aepos + BORDER;
             if (amax > aln.alen) amax = aln.alen;
-            if (COMP(aln.flags)) { 
+            if (COMP(aln.flags)) {
                 bmin = (aln.blen-ovl.path.bepos) - BORDER;
                 if (bmin < 0) bmin = 0;
                 bmax = (aln.blen-ovl.path.bbpos) + BORDER;
                 if (bmax > aln.blen) bmax = aln.blen;
-            } else { 
+            } else {
                 bmin = ovl.path.bbpos - BORDER;
                 if (bmin < 0) bmin = 0;
                 bmax = ovl.path.bepos + BORDER;
@@ -377,7 +377,7 @@ void Target::getAlignments(std::vector<dagcon::Alignment> &alns, unsigned int ma
             bseq = Load_Subread(&db_, ovl.bread, bmin, bmax, bbuffer_, 0);
 
             aln.aseq = aseq - amin;
-            if (COMP(aln.flags)) { 
+            if (COMP(aln.flags)) {
                 Complement_Seq(bseq,bmax-bmin);
                 aln.bseq = bseq - (aln.blen - bmax);
             } else

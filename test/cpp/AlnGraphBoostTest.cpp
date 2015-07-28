@@ -9,9 +9,9 @@
 
 TEST(AlnGraphBoostTest, RawConsensus) {
     std::string backbone = "ATATTAGGC";
-    AlnGraphBoost ag(backbone); 
+    AlnGraphBoost ag(backbone);
     dagcon::Alignment *algs = new dagcon::Alignment[5];
-    
+
     algs[0].tstr = "ATATTA---GGC";
     algs[0].qstr = "ATAT-AGCCGGC";
 
@@ -46,7 +46,7 @@ TEST(AlnGraphBoostTest, RawConsensus) {
 }
 
 TEST(AlnGraphBoostTest, DanglingNodes) {
-    AlnGraphBoost ag(12); 
+    AlnGraphBoost ag(12);
     dagcon::Alignment a;
     a.tstr = "C-GCGGA-T-G-";
     a.qstr = "CCGCGG-G-A-T";

@@ -76,8 +76,8 @@ class Reader {
     size_t minCov_;
     int nCnsThreads_;
 public:
-    Reader(AlnBuf* b, const std::string fpath, size_t minCov) : 
-        alnBuf_(b), 
+    Reader(AlnBuf* b, const std::string fpath, size_t minCov) :
+        alnBuf_(b),
         fpath_(fpath),
         minCov_(minCov)
     { }
@@ -90,7 +90,7 @@ public:
         el::Logger* logger = el::Loggers::getLogger("Reader");
         try {
             AlnProvider* ap;
-            if (fpath_ == "-") { 
+            if (fpath_ == "-") {
                 ap = new BlasrM5AlnProvider(&std::cin);
             } else {
                 ap = new BlasrM5AlnProvider(fpath_);
@@ -102,7 +102,7 @@ public:
                 size_t cov = alns.size();
                 if (cov == 0) continue;
                 if (cov < minCov_) {
-                    logger->debug("Coverage requirement not met for %v, coverage: %v", 
+                    logger->debug("Coverage requirement not met for %v, coverage: %v",
                         alns[0].id, alns.size());
                     continue;
                 }
@@ -111,12 +111,12 @@ public:
                 logger->debug(msg.str());
                 alnBuf_->push(alns);
             }
-        } 
+        }
         catch (M5Exception::FileOpenError) {
             logger->error("Error opening file: %s", fpath_);
         }
         catch (M5Exception::FormatError err) {
-            logger->error("Format error. Input: %s, Error: %s", 
+            logger->error("Format error. Input: %s, Error: %s",
                 fpath_, err.msg);
         }
         catch (M5Exception::SortError err) {
@@ -137,8 +137,8 @@ class Consensus {
     int minWeight_;
     SimpleAligner aligner;
 public:
-    Consensus(AlnBuf* ab, CnsBuf* cb, size_t minLen, int minWeight) : 
-        alnBuf_(ab), 
+    Consensus(AlnBuf* ab, CnsBuf* cb, size_t minLen, int minWeight) :
+        alnBuf_(ab),
         cnsBuf_(cb),
         minLen_(minLen),
         minWeight_(minWeight)
@@ -160,8 +160,8 @@ public:
             msg % alns.size();
             logger->info(msg.str());
 
-            if (AlignFirst) 
-                for_each(alns.begin(), alns.end(), aligner); 
+            if (AlignFirst)
+                for_each(alns.begin(), alns.end(), aligner);
 
             AlnGraphBoost ag(alns[0].tlen);
             for (auto it = alns.begin(); it != alns.end(); ++it) {
@@ -177,7 +177,7 @@ public:
                 boost::format fasta(">%s/%d_%d\n%s\n");
                 fasta % alns[0].id % result.range[0] % result.range[1];
                 fasta % result.seq;
-                cnsBuf_->push(fasta.str()); 
+                cnsBuf_->push(fasta.str());
             }
 
             alnBuf_->pop(&alns);
@@ -192,7 +192,7 @@ class Writer {
     int nCnsThreads_;
 public:
     Writer(CnsBuf* cb) : cnsBuf_(cb) {}
-    
+
     void setNumCnsThreads(int n) {
         nCnsThreads_ = n;
     }
@@ -203,7 +203,7 @@ public:
         int sentinelCount = 0;
         while (true) {
             std::cout << cns;
-            if (cns == "" && ++sentinelCount == nCnsThreads_) 
+            if (cns == "" && ++sentinelCount == nCnsThreads_)
                 break;
 
             cnsBuf_->pop(&cns);
@@ -243,11 +243,11 @@ void parseArgs(int argc, char **argv) {
             "Turns on verbose logging", cmd, false);
 
         TCLAP::UnlabeledValueArg<std::string> inputArg(
-            "input", "Input data", 
+            "input", "Input data",
             true, "-","either file path or stdin", cmd);
 
         cmd.parse(argc, argv);
-    
+
         popts.minCov  = minCovArg.getValue();
         popts.minLen  = minLenArg.getValue();
         popts.trim    = trimArg.getValue();
@@ -275,9 +275,9 @@ int main(int argc, char* argv[]) {
     CnsBuf cnsBuf(30);
 
     if (popts.threads > 1) {
-        logger->info("Multi-threaded. Input: %v, Threads: %v", 
+        logger->info("Multi-threaded. Input: %v, Threads: %v",
             popts.input, popts.threads);
-    
+
         Writer writer(&cnsBuf);
         writer.setNumCnsThreads(popts.threads);
         std::thread writerThread(writer);
@@ -296,7 +296,7 @@ int main(int argc, char* argv[]) {
         std::vector<std::thread>::iterator it;
         for (it = cnsThreads.begin(); it != cnsThreads.end(); ++it)
             it->join();
-    
+
         readerThread.join();
     } else {
         logger->info("Single-threaded. Input: %v", popts.input);
@@ -309,6 +309,6 @@ int main(int argc, char* argv[]) {
         cns();
         writer();
     }
-        
+
     return 0;
 }

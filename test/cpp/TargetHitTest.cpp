@@ -12,13 +12,13 @@ TEST(TargetHitTest, single_overlap_perfect) {
     path.bbpos = 1231;
     path.bepos = 8217;
     path.diffs = 0;
-    
+
     rec.ovl.path = path;
 
     TargetHit th;
     th.add(rec);
     th.computeOvlScore();
-    EXPECT_FLOAT_EQ(6986, th.ovlScore); 
+    EXPECT_FLOAT_EQ(6986, th.ovlScore);
 }
 
 TEST(TargetHitTest, single_overlap_inaccurate) {
@@ -32,13 +32,13 @@ TEST(TargetHitTest, single_overlap_inaccurate) {
     path.bbpos = 2000;
     path.bepos = 6000;
     path.diffs = 230;
-    
+
     rec.ovl.path = path;
 
     TargetHit th;
     th.add(rec);
     th.computeOvlScore();
-    EXPECT_FLOAT_EQ(3770, th.ovlScore); 
+    EXPECT_FLOAT_EQ(3770, th.ovlScore);
 }
 
 TEST(TargetHitTest, multi_overlap_inaccurate) {
@@ -65,13 +65,13 @@ TEST(TargetHitTest, multi_overlap_inaccurate) {
     p2.bepos = 7995;
     p2.diffs = 53;
     r2.ovl.path = p2;
-    
+
     TargetHit th;
 
     th.add(r1);
     th.computeOvlScore();
-    EXPECT_FLOAT_EQ(3770, th.ovlScore); 
+    EXPECT_FLOAT_EQ(3770, th.ovlScore);
     th.add(r2);
     th.computeOvlScore();
-    EXPECT_FLOAT_EQ(4721, th.ovlScore); 
+    EXPECT_FLOAT_EQ(4721, th.ovlScore);
 }

@@ -82,7 +82,7 @@ void Reader(TrgBuf& trgBuf, AlnProvider* ap) {
             if (! td.alns.empty())
                 trgBuf.push(td);
         } while (hasNext);
-    } 
+    }
     catch (PacBio::DagCon::IOException& e) {
         std::cerr << e.what();
         exit(1);
@@ -109,11 +109,11 @@ void Consensus(int id, TrgBuf& trgBuf, CnsBuf& cnsBuf) {
         CLOG(INFO, "Consensus") << msg % id % td.alns[0].id % td.alns.size();
 
         AlnGraphBoost ag(td.targSeq);
-        AlnVec alns = td.alns; 
+        AlnVec alns = td.alns;
         for (auto it = alns.begin(); it != alns.end(); ++it) {
             if (it->qstr.length() < popts.minLen) continue;
             dagcon::Alignment aln = normalizeGaps(*it);
-            // XXX: Shouldn't be needed for dazcon, but causes some infinite 
+            // XXX: Shouldn't be needed for dazcon, but causes some infinite
             // loops in the current consensus code.
             trimAln(aln, popts.trim);
             ag.addAln(aln);
@@ -127,7 +127,7 @@ void Consensus(int id, TrgBuf& trgBuf, CnsBuf& cnsBuf) {
             boost::format fasta(">%s/%d_%d\n%s\n");
             fasta % alns[0].id % result.range[0] % result.range[1];
             fasta % result.seq;
-            cnsBuf.push(fasta.str()); 
+            cnsBuf.push(fasta.str());
         }
         trgBuf.pop(&td);
     }
@@ -143,7 +143,7 @@ void Writer(CnsBuf& cnsBuf) {
     int sentinelCount = 0;
     while (true) {
         std::cout << cns;
-        if (cns == "" && ++sentinelCount == popts.threads) 
+        if (cns == "" && ++sentinelCount == popts.threads)
             break;
 
         cnsBuf.pop(&cns);
@@ -200,11 +200,11 @@ void parseArgs(int argc, char **argv) {
             "Turns on verbose logging", cmd, false);
 
         TCLAP::UnlabeledMultiArg<int> targetArgs(
-            "targets", "Limit consensus to list of target ids", 
+            "targets", "Limit consensus to list of target ids",
             false, "list of ints", cmd);
 
         cmd.parse(argc, argv);
-    
+
         popts.minCov     = minCovArg.getValue();
         popts.minLen     = minLenArg.getValue();
         popts.trim       = trimArg.getValue();
@@ -240,7 +240,7 @@ int main(int argc, char* argv[]) {
         std::thread ct(Consensus, i, std::ref(trgBuf), std::ref(cnsBuf));
         cnsThreads.push_back(std::move(ct));
     }
-   
+
     std::thread readerThread(Reader, std::ref(trgBuf), ap);
 
     writerThread.join();

@@ -74,7 +74,7 @@ bool BlasrM5AlnProvider::nextTarget(std::vector<dagcon::Alignment>& dest) {
     // process up to EOF or next target
     // need to maintain state in between calls
     if (! firstAln_)
-        dest.push_back(prevAln_); 
+        dest.push_back(prevAln_);
 
     dagcon::Alignment aln;
     while (*is_ >> aln) {
@@ -122,7 +122,7 @@ void BlasrM5AlnProvider::checkFormat() {
     dagcon::Alignment aln;
     std::vector<std::string> raw, sorted;
     int max = 50, count = 0;
-    while(ifs >> aln && count++ < max) 
+    while(ifs >> aln && count++ < max)
         raw.push_back(aln.id);
 
     sorted = raw;
