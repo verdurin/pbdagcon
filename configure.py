@@ -233,7 +233,8 @@ def write_makefile(build_dir_root, src_dir_root, makefilename, relpath):
     src_dir = os.path.join(src_dir_root, relpath)
     build_dir = os.path.join(build_dir_root, relpath)
     content = """\
-VPATH:=%(src_dir)s
+vpath %%.cpp %(src_dir)s
+vpath %%.c %(src_dir)s
 include %(src_dir)s/%(makefilename)s
 """ %dict(makefilename=makefilename, src_dir=src_dir)
     mkdirs(build_dir)
