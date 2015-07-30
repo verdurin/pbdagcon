@@ -4,7 +4,6 @@ all:
 THISDIR:=$(dir $(lastword ${MAKEFILE_LIST}))
 -include ${CURDIR}/../../defines.mk
 SRCDIR := ${THISDIR}
-VPATH:=${VPATH}:${THISDIR}/../../src/cpp
 
 INCDIRS := . \
 	${SRCDIR} \
@@ -73,6 +72,8 @@ testexes   := $(filter-out ${broken_testexes},${testexes})
 ldp+=${LIBBLASR_LIB}:${LIBPBDATA_LIB}:${LIBPBIHDF_LIB}:${PBBAM_LIB}:${HDF5_LIB}:${HTSLIB_LIB}:${ZLIB_LIB}:${LD_LIBRARY_PATH}
 #export LD_LIBRARY_PATH
 
+vpath %.c ${THISDIR}/../../src/cpp
+vpath %.cpp ${THISDIR}/../../src/cpp
 vpath %.cc ${GTEST_SRC}
 
 BUILDMSG = "=== Building $@ ==="
