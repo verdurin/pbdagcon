@@ -48,8 +48,10 @@
 #include "AlnProvider.hpp"
 
 // Dazzler headers
+extern "C" {
 #include "DB.h"
 #include "align.h"
+}
 
 // Represents one record from the LAS file, essentially a thin container for
 // a dazzler overlap so we can manage things on the stack.

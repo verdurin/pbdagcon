@@ -55,10 +55,6 @@
 
 #include <stdio.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 typedef unsigned char      uint8;
 typedef unsigned short     uint16;
 typedef unsigned int       uint32;
@@ -349,9 +345,5 @@ void Read_All_Sequences(HITS_DB *db, int ascii);
   //   Return non-zero iff path could not be opened for any reason.
 
 int List_DB_Files(char *path, void foreach(char *path, char *extension));
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif // _HITS_DB
