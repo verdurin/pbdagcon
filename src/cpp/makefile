@@ -5,13 +5,15 @@ THISDIR:=$(dir $(lastword ${MAKEFILE_LIST}))
 
 COMMON_OBJECTS := Alignment.o AlnGraphBoost.o
 PBDAGCON_OBJECTS := BlasrM5AlnProvider.o main.o SimpleAligner.o
-DAZCON_OBJECTS := DB.o align.o DazAlnProvider.o dazcon.o
+DAZCON_OBJECTS := DB.o QV.o align.o DazAlnProvider.o dazcon.o
 
 CPPFLAGS += -MMD -MP
 CXXFLAGS = -O3 -std=c++11 -Wall -Wuninitialized -pedantic
 CFLAGS = -O3 -Wall -Wextra -fno-strict-aliasing
 
 INCDIRS := \
+	${DAZZ_DB_INCLUDE} \
+	${DALIGNER_INCLUDE} \
 	${LIBBLASR_INCLUDE} \
 	${LIBPBDATA_INCLUDE} \
 	${LIBPBIHDF_INCLUDE} \
@@ -41,6 +43,10 @@ LDLIBS+= \
 	${DL_LIBFLAGS}
 CPPFLAGS+=$(patsubst %,-I%,${INCDIRS}) $(patsubst %,-isystem%,${SYS_INCDIRS})
 LDFLAGS+=$(patsubst %,-L %,${LIBDIRS})
+
+vpath align.c ${DALIGNER_SRC}
+vpath DB.c ${DAZZ_DB_SRC}
+vpath QV.c ${DAZZ_DB_SRC}
 
 all: pbdagcon dazcon
 
