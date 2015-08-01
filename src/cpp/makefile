@@ -5,18 +5,22 @@ THISDIR:=$(dir $(lastword ${MAKEFILE_LIST}))
 
 COMMON_OBJECTS := Alignment.o AlnGraphBoost.o
 PBDAGCON_OBJECTS := BlasrM5AlnProvider.o main.o SimpleAligner.o
-DAZCON_OBJECTS := DB.o align.o DazAlnProvider.o dazcon.o
+DAZCON_OBJECTS := DB.o QV.o align.o DazAlnProvider.o dazcon.o
 
+CPPFLAGS += -MMD -MP
 CXXFLAGS = -O3 -std=c++11 -Wall -Wuninitialized -pedantic
 CFLAGS = -O3 -Wall -Wextra -fno-strict-aliasing
 
 INCDIRS := \
+	${DAZZ_DB_INCLUDE} \
+	${DALIGNER_INCLUDE} \
 	${LIBBLASR_INCLUDE} \
 	${LIBPBDATA_INCLUDE} \
 	${LIBPBIHDF_INCLUDE} \
 	${PBBAM_INCLUDE} \
 	${HDF5_INCLUDE} \
-	${HTSLIB_INCLUDE} \
+	${HTSLIB_INCLUDE}
+SYS_INCDIRS := \
 	${BOOST_INCLUDE} \
 	${THISDIR}/third-party
 LIBDIRS := \
@@ -37,8 +41,12 @@ LDLIBS+= \
 	${ZLIB_LIBFLAGS} \
 	${PTHREAD_LIBFLAGS} \
 	${DL_LIBFLAGS}
-CPPFLAGS+=$(patsubst %,-I%,${INCDIRS})
+CPPFLAGS+=$(patsubst %,-I%,${INCDIRS}) $(patsubst %,-isystem%,${SYS_INCDIRS})
 LDFLAGS+=$(patsubst %,-L %,${LIBDIRS})
+
+vpath align.c ${DALIGNER_SRC}
+vpath DB.c ${DAZZ_DB_SRC}
+vpath QV.c ${DAZZ_DB_SRC}
 
 all: pbdagcon dazcon
 
@@ -58,3 +66,9 @@ clean:
 	$(RM) dazcon
 
 .PHONY: all clean
+
+SRCS:=    $(notdir $(wildcard ${THISDIR}/*.c))
+CPP_SRCS:=$(notdir $(wildcard ${THISDIR}/*.cpp))
+DEPS:=$(patsubst %.c,%.d,${SRCS})
+CPP_DEPS:=$(patsubst %.cpp,%.d,${CPP_SRCS})
+-include ${DEPS} ${CPP_DEPS}

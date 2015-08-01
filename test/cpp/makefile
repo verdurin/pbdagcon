@@ -8,6 +8,8 @@ SRCDIR := ${THISDIR}
 INCDIRS := . \
 	${SRCDIR} \
 	${SRCDIR}/../../src/cpp \
+	${DAZZ_DB_INCLUDE} \
+	${DALIGNER_INCLUDE} \
 	${LIBBLASR_INCLUDE} \
 	${LIBPBDATA_INCLUDE} \
 	${LIBPBIHDF_INCLUDE} \
@@ -50,7 +52,7 @@ GTEST_CXXFLAGS += -g -Wall -Wextra -pthread
 CXXFLAGS := -O3 -std=c++11
 
 GTEST_OBJECTS := gtest-all.o gtest_main.o
-DAZCON_OBJECTS := DB.o align.o Alignment.o \
+DAZCON_OBJECTS := DB.o QV.o align.o Alignment.o \
 			      DazAlnProvider.o
 
 PBDAGCON_OBJECTS := AlnGraphBoost.o Alignment.o \
@@ -75,6 +77,10 @@ ldp+=${LIBBLASR_LIB}:${LIBPBDATA_LIB}:${LIBPBIHDF_LIB}:${PBBAM_LIB}:${HDF5_LIB}:
 vpath %.c ${THISDIR}/../../src/cpp
 vpath %.cpp ${THISDIR}/../../src/cpp
 vpath %.cc ${GTEST_SRC}
+vpath align.c ${DALIGNER_SRC}
+vpath DB.c ${DAZZ_DB_SRC}
+vpath QV.c ${DAZZ_DB_SRC}
+
 
 BUILDMSG = "=== Building $@ ==="
 

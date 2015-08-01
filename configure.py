@@ -10,7 +10,7 @@ import contextlib
 import os
 import sys
 
-PBDAGCON_ROOT = os.path.abspath(os.path.dirname(__file__))
+ROOT = os.path.abspath(os.path.dirname(__file__))
 
 def log(msg):
     sys.stderr.write(msg)
@@ -155,6 +155,8 @@ def compose_defines_pacbio(envin):
             'HTSLIB_INCLUDE', 'HTSLIB_LIB', 'HTSLIB_LIBFLAGS',
             'BOOST_INCLUDE',
             'ZLIB_LIB', 'ZLIB_LIBFLAGS',
+            'DAZZ_DB_SRC', 'DAZZ_DB_INCLUDE',
+            'DALIGNER_SRC', 'DALIGNER_INCLUDE',
     ])
     update_env_if(env, envin, possibs)
     return compose_defs_env(env)
@@ -199,6 +201,10 @@ def set_defs_defaults(env, nopbbam):
         'LIBPBDATA_LIBFLAGS': '-lpbdata',
         'LIBBLASR_LIBFLAGS':  '-lblasr',
         'SHELL': 'bash -xe',
+        'DAZZ_DB_SRC': os.path.join(ROOT, '..', 'DAZZ_DB'),
+        'DALIGNER_SRC': os.path.join(ROOT, '..', 'DALIGNER'),
+        'DAZZ_DB_INCLUDE': '${DAZZ_DB_SRC}',
+        'DALIGNER_INCLUDE': '${DALIGNER_SRC}',
     }
     pbbam_defaults = {
         'LIBPBIHDF_LIBFLAGS': '-lpbihdf',
@@ -216,14 +222,18 @@ def set_defs_defaults(env, nopbbam):
             env[k] = defaults[k]
 
 def set_defs_submodule_defaults(env, nopbbam):
-    subdir = os.path.join(PBDAGCON_ROOT, 'blasr_libcpp')
+    libcpp = os.path.join(ROOT, 'blasr_libcpp')
+    daligner = os.path.join(ROOT, 'DALIGNER')
+    dazz_db = os.path.join(ROOT, 'DAZZ_DB')
     defaults = {
-        'LIBPBDATA_INCLUDE': os.path.join(subdir, 'pbdata'),
-        'LIBBLASR_INCLUDE':  os.path.join(subdir, 'alignment'),
-        'LIBPBIHDF_INCLUDE': '' if nopbbam else os.path.join(subdir, 'hdf'),
-        'LIBPBDATA_LIB': os.path.join(subdir, 'pbdata'),
-        'LIBBLASR_LIB':  os.path.join(subdir, 'alignment'),
-        'LIBPBIHDF_LIB': '' if nopbbam else os.path.join(subdir, 'hdf'),
+        'LIBPBDATA_INCLUDE': os.path.join(libcpp, 'pbdata'),
+        'LIBBLASR_INCLUDE':  os.path.join(libcpp, 'alignment'),
+        'LIBPBIHDF_INCLUDE': '' if nopbbam else os.path.join(libcpp, 'hdf'),
+        'LIBPBDATA_LIB': os.path.join(libcpp, 'pbdata'),
+        'LIBBLASR_LIB':  os.path.join(libcpp, 'alignment'),
+        'LIBPBIHDF_LIB': '' if nopbbam else os.path.join(libcpp, 'hdf'),
+        'DALIGNER_SRC': daligner,
+        'DAZZ_DB_SRC': dazz_db,
     }
     for k in defaults:
         if k not in env:
@@ -242,9 +252,9 @@ include %(src_dir)s/%(makefilename)s
     update_content(fn, content)
 
 def write_makefiles(build_dir):
-    write_makefile(build_dir, PBDAGCON_ROOT, 'makefile', '.')
-    write_makefile(build_dir, PBDAGCON_ROOT, 'makefile', 'src/cpp')
-    write_makefile(build_dir, PBDAGCON_ROOT, 'makefile', 'test/cpp')
+    write_makefile(build_dir, ROOT, 'makefile', '.')
+    write_makefile(build_dir, ROOT, 'makefile', 'src/cpp')
+    write_makefile(build_dir, ROOT, 'makefile', 'test/cpp')
 
 def main(prog, *args):
     """We are still deciding what env-vars to use, if any.
