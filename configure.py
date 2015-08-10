@@ -153,7 +153,7 @@ def compose_defines_pacbio(envin):
             'HDF5_INCLUDE', 'HDF5_LIB', 'HDF5_LIBFLAGS',
             'PBBAM_INCLUDE', 'PBBAM_LIB', 'PBBAM_LIBFLAGS',
             'HTSLIB_INCLUDE', 'HTSLIB_LIB', 'HTSLIB_LIBFLAGS',
-            'BOOST_INCLUDE',
+            'BOOST_INCLUDE','PTHREAD_LIBFLAGS',
             'ZLIB_LIB', 'ZLIB_LIBFLAGS',
             'DAZZ_DB_SRC', 'DAZZ_DB_INCLUDE',
             'DALIGNER_SRC', 'DALIGNER_INCLUDE',
@@ -205,6 +205,7 @@ def set_defs_defaults(env, nopbbam):
         'DALIGNER_SRC': os.path.join(ROOT, '..', 'DALIGNER'),
         'DAZZ_DB_INCLUDE': '${DAZZ_DB_SRC}',
         'DALIGNER_INCLUDE': '${DALIGNER_SRC}',
+        'PTHREAD_LIBFLAGS': '-lpthread',
     }
     pbbam_defaults = {
         'LIBPBIHDF_LIBFLAGS': '-lpbihdf',
