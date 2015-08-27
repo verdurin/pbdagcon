@@ -23,6 +23,7 @@ update-submodule:
 
 build-submodule:
 	cd blasr_libcpp; NOHDF=1 NOPBBAM=1 ./configure.py
+	${MAKE} -C blasr_libcpp/pbdata libconfig.h
 	${MAKE} -C blasr_libcpp/pbdata libpbdata.a
 	${MAKE} -C blasr_libcpp/alignment libblasr.a
 
