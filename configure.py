@@ -176,6 +176,39 @@ def get_make_style_env(envin, args):
     envout.update(envin)
     return envout
 
+class OsType:
+    Unknown, Linux, Darwin = range(3)
+
+def getOsType():
+    uname = shell('uname -s')
+    log('uname=%r' %uname)
+    if 'Darwin' in uname:
+        return OsType.Darwin
+    elif 'Linux' in uname:
+        return OsType.Linux
+    else:
+        return OsType.Unknown
+
+def update_env_for_linux(env):
+    env['SET_LIB_NAME'] = '-soname'
+    env['SH_LIB_EXT'] = '.so'
+    env['EXTRA_LDFLAGS'] = '-Wl,--no-as-needed'
+def update_env_for_darwin(env):
+    env['SET_LIB_NAME'] = '-install_name'
+    env['SH_LIB_EXT'] = '.dylib'
+    env['EXTRA_LDFLAGS'] = '-flat_namespace'
+    # -flat_namespace makes BSD ld act like Linux ld, finding
+    # shared libs recursively.
+def update_env_for_unknown(env):
+    env['SET_LIB_NAME'] = '-soname'
+    env['SH_LIB_EXT'] = '.so'
+update_env_for_os = {
+    OsType.Linux: update_env_for_linux,
+    OsType.Darwin: update_env_for_darwin,
+    OsType.Unknown: update_env_for_unknown,
+}
+
+
 def parse_args(args):
     parser = argparse.ArgumentParser()
     parser.add_argument('--boost-headers', action='store_true',
@@ -262,6 +295,8 @@ def main(prog, *args):
     """
     conf = parse_args(args)
     envin = get_make_style_env(os.environ, conf.makevars)
+    ost = getOsType()
+    update_env_for_os[ost](envin)
     if conf.build_dir is not None:
         write_makefiles(conf.build_dir)
     else:
