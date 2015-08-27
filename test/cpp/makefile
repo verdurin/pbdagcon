@@ -27,6 +27,7 @@ LIBDIRS := \
 	${PBBAM_LIB} \
 	${HDF5_LIB} \
 	${HTSLIB_LIB} \
+	${GCC_LIB} \
 	${ZLIB_LIB}
 
 PTHREAD_LIBFLAGS:=-lpthread
@@ -71,7 +72,9 @@ testexes := ${pbdagcon_testexes} ${dazcon_testexes}
 # Remove broken tests exes from the testexes list
 testexes   := $(filter-out ${broken_testexes},${testexes})
 
-ldp+=${LIBBLASR_LIB}:${LIBPBDATA_LIB}:${LIBPBIHDF_LIB}:${PBBAM_LIB}:${HDF5_LIB}:${HTSLIB_LIB}:${ZLIB_LIB}:${LD_LIBRARY_PATH}
+empty:=
+space:=${empty} ${empty}
+ldp+=$(subst ${space},:,${LIBDIRS}):${LD_LIBRARY_PATH}
 #export LD_LIBRARY_PATH
 
 vpath %.c ${THISDIR}/../../src/cpp
