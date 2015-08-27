@@ -43,6 +43,7 @@ LDLIBS+= \
 	${DL_LIBFLAGS}
 CPPFLAGS+=$(patsubst %,-I%,${INCDIRS}) $(patsubst %,-isystem%,${SYS_INCDIRS})
 LDFLAGS+=$(patsubst %,-L %,${LIBDIRS})
+LDFLAGS += ${EXTRA_LDFLAGS}
 
 vpath align.c ${DALIGNER_SRC}
 vpath DB.c ${DAZZ_DB_SRC}
@@ -52,10 +53,10 @@ all: pbdagcon dazcon
 
 # Technically does not need pbdata or blasr, but so what?
 dazcon: $(COMMON_OBJECTS) $(DAZCON_OBJECTS)
-	$(CXX) -Wl,--no-as-needed -o $@ $^ $(LDFLAGS) $(LDLIBS)
+	$(CXX) -o $@ $^ $(LDFLAGS) $(LDLIBS)
 
 pbdagcon: $(COMMON_OBJECTS) $(PBDAGCON_OBJECTS)
-	$(CXX) -Wl,--no-as-needed -o $@ $^ $(LDFLAGS) $(LDLIBS)
+	$(CXX) -o $@ $^ $(LDFLAGS) $(LDLIBS)
 
 $(COMMON_OBJECTS) $(PBDAGCON_OBJECTS):
 
