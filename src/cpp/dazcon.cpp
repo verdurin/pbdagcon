@@ -95,6 +95,7 @@ void Reader(TrgBuf& trgBuf, AlnProvider* ap) {
 }
 
 void Consensus(int id, TrgBuf& trgBuf, CnsBuf& cnsBuf) {
+    int fake_well_counter; // just to avoid too many reads in the same bin
     TargetData td;
     trgBuf.pop(&td);
     std::vector<CnsResult> seqs;
@@ -124,10 +125,14 @@ void Consensus(int id, TrgBuf& trgBuf, CnsBuf& cnsBuf) {
         ag.consensus(seqs, popts.minCov, popts.minLen);
         for (auto it = seqs.begin(); it != seqs.end(); ++it) {
             CnsResult result = *it;
-            boost::format fasta(">%s/%d_%d\n%s\n");
-            fasta % alns[0].id % result.range[0] % result.range[1];
-            fasta % result.seq;
+            boost::format fasta(">%s/%d/%d_%d\n%s\n");
+            fasta % alns[0].id
+                  % fake_well_counter
+                  % result.range[0]
+                  % result.range[1]
+                  % result.seq;
             cnsBuf.push(fasta.str());
+            ++fake_well_counter;
         }
         trgBuf.pop(&td);
     }
