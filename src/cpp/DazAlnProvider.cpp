@@ -383,7 +383,7 @@ void Target::getAlignments(std::vector<dagcon::Alignment> &alns, unsigned int ma
             } else
                 aln.bseq = bseq - bmin;
 
-            Compute_Trace_PTS(&aln, work_, tspace_);
+            Compute_Trace_PTS(&aln, work_, tspace_, GREEDIEST);
 
             // initialize the dagcon alignment class
             dagcon::Alignment dest;
