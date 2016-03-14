@@ -56,7 +56,7 @@ class BoundedBuffer {
 public:
     typedef std::deque<T> buffer_type;
 
-    BoundedBuffer(int max) : max_(max) { }
+    BoundedBuffer(size_t max) : max_(max) { }
 
     void push(T item) {
         std::unique_lock<std::mutex> lock(mutex_);
@@ -67,7 +67,7 @@ public:
 
     void pop(T* pItem) {
         std::unique_lock<std::mutex> lock(mutex_);
-        not_empty_.wait(lock, [this](){return buffer_.size() != 0;});
+        not_empty_.wait(lock, [this](){return buffer_.size() != 0U;});
         *pItem = buffer_.back();
         buffer_.pop_back();
         not_full_.notify_one();
@@ -78,7 +78,7 @@ public:
     }
 
 private:
-    int max_;
+    size_t max_;
     buffer_type buffer_;
     std::mutex mutex_;
     std::condition_variable not_empty_;
