@@ -60,7 +60,7 @@
 #include "SimpleAligner.hpp"
 #include "ProgramOpts.hpp"
 
-INITIALIZE_EASYLOGGINGPP
+INITIALIZE_NULL_EASYLOGGINGPP
 
 ProgramOpts popts;
 
@@ -261,8 +261,18 @@ void parseArgs(int argc, char **argv) {
 }
 
 int main(int argc, char* argv[]) {
-    START_EASYLOGGINGPP(argc, argv);
     parseArgs(argc, argv);
+#if ELPP_ASYNC_LOGGING
+    el::base::elStorage.reset(
+       new el::base::Storage(el::LogBuilderPtr(new el::base::DefaultLogBuilder()),
+                                               new el::base::AsyncDispatchWorker())
+    );
+#else
+    el::base::elStorage.reset(
+       new el::base::Storage(el::LogBuilderPtr(new el::base::DefaultLogBuilder()))
+    );
+#endif  // ELPP_ASYNC_LOGGING
+    START_EASYLOGGINGPP(argc, argv);
 
     el::Logger* logger = el::Loggers::getLogger("default");
 
