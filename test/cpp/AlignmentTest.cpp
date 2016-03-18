@@ -78,14 +78,66 @@ TEST(Alignment, ParseQuery) {
 }
 
 TEST(Alignment, Trim) {
+  std::string const t = "ACG-TCA-GCA";
+  std::string const q = "AC-C-C-T---";
+  {
     dagcon::Alignment aln;
-    aln.tstr = "ACG-TA-GCA";
-    aln.qstr = "AC-C--T---";
+    aln.tstr = t;
+    aln.qstr = q;
+    aln.start = 1;
+    aln.strand = '-';
+
+    trimAln(aln, 0);
+    EXPECT_EQ(1, aln.start);
+    EXPECT_EQ(t, aln.tstr);
+    EXPECT_EQ(q, aln.qstr);
+  }
+  {
+    dagcon::Alignment aln;
+    aln.tstr = t;
+    aln.qstr = q;
+    aln.start = 1;
+    aln.strand = '-';
+
+    trimAln(aln, 3);
+    EXPECT_EQ(4, aln.start);
+    EXPECT_EQ("-TCA-", aln.tstr);
+    EXPECT_EQ("C-C-T", aln.qstr);
+  }
+  {
+    dagcon::Alignment aln;
+    aln.tstr = t;
+    aln.qstr = q;
     aln.start = 1;
     aln.strand = '-';
 
     trimAln(aln, 4);
     EXPECT_EQ(5, aln.start);
-    EXPECT_EQ("-TA-", aln.tstr);
-    EXPECT_EQ("C--T", aln.qstr);
+    EXPECT_EQ("C", aln.tstr);
+    EXPECT_EQ("C", aln.qstr);
+  }
+  {
+    dagcon::Alignment aln;
+    aln.tstr = t;
+    aln.qstr = q;
+    aln.start = 1;
+    aln.strand = '-';
+
+    trimAln(aln, 5);
+    EXPECT_EQ(6, aln.start);
+    EXPECT_EQ("", aln.tstr);
+    EXPECT_EQ("", aln.qstr);
+  }
+  {
+    dagcon::Alignment aln;
+    aln.tstr = t;
+    aln.qstr = q;
+    aln.start = 1;
+    aln.strand = '-';
+
+    trimAln(aln, 500);
+    // EXPECT_EQ(1 + 9, aln.start); // start could be anything, really
+    EXPECT_EQ("", aln.tstr);
+    EXPECT_EQ("", aln.qstr);
+  }
 }
