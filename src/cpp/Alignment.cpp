@@ -254,7 +254,7 @@ void trimAln(Alignment& aln, int trimLen) {
 
     int rbases = 0, roffs = aln.tstr.length();
     while (rbases < trimLen) {
-        if (aln.tstr[roffs--] != '-') {
+        if (aln.tstr[--roffs] != '-') {
             rbases++;
         }
     }
