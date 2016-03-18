@@ -1,6 +1,7 @@
 #include <string>
 #include <sstream>
 #include <map>
+#include <memory>
 #include <vector>
 #include <gtest/gtest.h>
 #include <boost/graph/adjacency_list.hpp>
@@ -10,7 +11,7 @@
 TEST(AlnGraphBoostTest, RawConsensus) {
     std::string backbone = "ATATTAGGC";
     AlnGraphBoost ag(backbone);
-    dagcon::Alignment *algs = new dagcon::Alignment[5];
+    std::unique_ptr<dagcon::Alignment[]> algs(new dagcon::Alignment[5]);
 
     algs[0].tstr = "ATATTA---GGC";
     algs[0].qstr = "ATAT-AGCCGGC";
