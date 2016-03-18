@@ -245,15 +245,20 @@ Alignment normalizeGaps(Alignment& aln, bool push) {
 }
 
 void trimAln(Alignment& aln, int trimLen) {
-    int lbases = 0, loffs = 0;
-    while(lbases < trimLen) {
+    int lbases, rbases;
+    size_t loffs, roffs;
+    auto const len = aln.tstr.length();
+
+    lbases = 0; loffs = 0U;
+    while(lbases < trimLen && loffs < len) {
         if (aln.tstr[loffs++] != '-') {
             lbases++;
         }
     }
 
-    int rbases = 0, roffs = aln.tstr.length();
-    while (rbases < trimLen) {
+    rbases = 0;
+    roffs = len;
+    while (rbases < trimLen && roffs > loffs) {
         if (aln.tstr[--roffs] != '-') {
             rbases++;
         }
