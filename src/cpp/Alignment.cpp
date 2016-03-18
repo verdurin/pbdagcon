@@ -166,14 +166,14 @@ std::ostream& operator<<(std::ostream& ostrm, Alignment& data) {
 
 Alignment normalizeGaps(Alignment& aln, bool push) {
     // XXX: optimize this
-    size_t qlen = aln.qstr.length(), tlen = aln.tstr.length();
-    assert(qlen == tlen);
+    assert(aln.qstr.length() == aln.tstr.length());
+    size_t len = aln.qstr.length();
     std::string qNorm, tNorm;
-    qNorm.reserve(qlen+100);
-    tNorm.reserve(tlen+100);
+    qNorm.reserve(len+100);
+    tNorm.reserve(len+100);
 
     // convert mismatches to indels
-    for (size_t i=0; i < qlen; i++) {
+    for (size_t i=0; i < len; i++) {
         char qb = aln.qstr[i], tb = aln.tstr[i];
         if (qb != tb && qb != '-' && tb != '-') {
             qNorm += '-';
@@ -186,19 +186,19 @@ Alignment normalizeGaps(Alignment& aln, bool push) {
         }
     }
 
-    // update lengths
-    qlen = qNorm.length();
-    tlen = tNorm.length();
+    // update length
+    assert(qNorm.length() == tNorm.length());
+    len = qNorm.length();
 
     if (push) {
         // push gaps to the right, but not past the end
-        for (size_t i=0; i < qlen-1; i++) {
+        for (size_t i=0; i < len-1; i++) {
             // pushing target gaps
             if (tNorm[i] == '-') {
                 size_t j = i;
-                while (true) {
-                    char c = tNorm[++j];
-                    if (c != '-' || j > qlen - 1) {
+                while (++j < len) {
+                    char c = tNorm[j];
+                    if (c != '-') {
                         if (c == qNorm[i]) {
                             tNorm[i] = c;
                             tNorm[j] = '-';
@@ -211,9 +211,9 @@ Alignment normalizeGaps(Alignment& aln, bool push) {
             // pushing query gaps
             if (qNorm[i] == '-') {
                 size_t j = i;
-                while (true) {
-                    char c = qNorm[++j];
-                    if (c != '-' || j > tlen - 1) {
+                while (++j < len) {
+                    char c = qNorm[j];
+                    if (c != '-') {
                         if (c == tNorm[i]) {
                             qNorm[i] = c;
                             qNorm[j] = '-';
@@ -224,6 +224,8 @@ Alignment normalizeGaps(Alignment& aln, bool push) {
             }
         }
     }
+    assert(qNorm.length() == tNorm.length());
+    assert(len == tNorm.length());
 
     // generate the final, normalized alignment strings
     Alignment finalNorm;
@@ -232,7 +234,7 @@ Alignment normalizeGaps(Alignment& aln, bool push) {
     finalNorm.start = aln.start;
     finalNorm.tlen = aln.tlen;
     finalNorm.strand = aln.strand;
-    for (size_t i=0; i < qlen; i++) {
+    for (size_t i=0; i < len; i++) {
         if (qNorm[i] != '-' || tNorm[i] != '-') {
             finalNorm.qstr += qNorm[i];
             finalNorm.tstr += tNorm[i];
@@ -243,16 +245,21 @@ Alignment normalizeGaps(Alignment& aln, bool push) {
 }
 
 void trimAln(Alignment& aln, int trimLen) {
-    int lbases = 0, loffs = 0;
-    while(lbases < trimLen) {
+    int lbases, rbases;
+    size_t loffs, roffs;
+    auto const len = aln.tstr.length();
+
+    lbases = 0; loffs = 0U;
+    while(lbases < trimLen && loffs < len) {
         if (aln.tstr[loffs++] != '-') {
             lbases++;
         }
     }
 
-    int rbases = 0, roffs = aln.tstr.length();
-    while (rbases < trimLen) {
-        if (aln.tstr[roffs--] != '-') {
+    rbases = 0;
+    roffs = len;
+    while (rbases < trimLen && roffs > loffs) {
+        if (aln.tstr[--roffs] != '-') {
             rbases++;
         }
     }

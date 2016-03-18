@@ -77,15 +77,67 @@ TEST(Alignment, ParseQuery) {
     EXPECT_EQ("CTGCA--CT", aln.qstr.substr(0,9));
 }
 
-TEST(AlnGraphBoostTest, Trim) {
+TEST(Alignment, Trim) {
+  std::string const t = "ACG-TCA-GCA";
+  std::string const q = "AC-C-C-T---";
+  {
     dagcon::Alignment aln;
-    aln.tstr = "GATGAAGCCGGGG---TTACAGGCATGGATGTGGATAACGTCGAGTA-C-AGTC-GTA----TTC--C-TGCAGGGGTTGACG-TTTT-CCACCATCGCACGCCGGGACCATCACCGT-TAT-GAAGATTCAGCA-CCGGGG-GCGGCTGAATGATTTTCTCCTGATGGCCATTGACGGAGGATGATTGCCCGGCCGGAC";
-    aln.qstr = "GATGAAGC-GGGGGCGTTACAG-CATGGATGT------CG---AGTAACG-GTCAGTACCAGTTCATCCTGCAGG--TTGACGGTTTTTCCACCATCGCACGCCGGGACCATCACCGTGTATCGAAGATTCA-CAAC-GGGGC-CG-CTGAATGATTTTCTC-TG-TG-CCAT-GACGGAGGATGAT-GCCCG-CCGGA-";
+    aln.tstr = t;
+    aln.qstr = q;
     aln.start = 1;
     aln.strand = '-';
 
-    trimAln(aln, 14);
-    EXPECT_EQ("TACAGGCATGGATGTGGATAACGTCGAGTA-C-AGTC-GTA----TTC--C-TGCAGGGGTTGACG-TTTT-CCACCATCGCACGCCGGGACCATCACCGT-TAT-GAAGATTCAGCA-CCGGGG-GCGGCTGAATGATTTTCTCCTGATGGCCATTGACGGAGGATGA", aln.tstr);
-    EXPECT_EQ("TACAG-CATGGATGT------CG---AGTAACG-GTCAGTACCAGTTCATCCTGCAGG--TTGACGGTTTTTCCACCATCGCACGCCGGGACCATCACCGTGTATCGAAGATTCA-CAAC-GGGGC-CG-CTGAATGATTTTCTC-TG-TG-CCAT-GACGGAGGATGA", aln.qstr);
-    EXPECT_EQ(15, aln.start);
+    trimAln(aln, 0);
+    EXPECT_EQ(1, aln.start);
+    EXPECT_EQ(t, aln.tstr);
+    EXPECT_EQ(q, aln.qstr);
+  }
+  {
+    dagcon::Alignment aln;
+    aln.tstr = t;
+    aln.qstr = q;
+    aln.start = 1;
+    aln.strand = '-';
+
+    trimAln(aln, 3);
+    EXPECT_EQ(4, aln.start);
+    EXPECT_EQ("-TCA-", aln.tstr);
+    EXPECT_EQ("C-C-T", aln.qstr);
+  }
+  {
+    dagcon::Alignment aln;
+    aln.tstr = t;
+    aln.qstr = q;
+    aln.start = 1;
+    aln.strand = '-';
+
+    trimAln(aln, 4);
+    EXPECT_EQ(5, aln.start);
+    EXPECT_EQ("C", aln.tstr);
+    EXPECT_EQ("C", aln.qstr);
+  }
+  {
+    dagcon::Alignment aln;
+    aln.tstr = t;
+    aln.qstr = q;
+    aln.start = 1;
+    aln.strand = '-';
+
+    trimAln(aln, 5);
+    EXPECT_EQ(6, aln.start);
+    EXPECT_EQ("", aln.tstr);
+    EXPECT_EQ("", aln.qstr);
+  }
+  {
+    dagcon::Alignment aln;
+    aln.tstr = t;
+    aln.qstr = q;
+    aln.start = 1;
+    aln.strand = '-';
+
+    trimAln(aln, 500);
+    // EXPECT_EQ(1 + 9, aln.start); // start could be anything, really
+    EXPECT_EQ("", aln.tstr);
+    EXPECT_EQ("", aln.qstr);
+  }
 }
