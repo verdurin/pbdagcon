@@ -84,7 +84,7 @@ vpath align.c ${DALIGNER_SRC}
 vpath DB.c ${DAZZ_DB_SRC}
 vpath QV.c ${DAZZ_DB_SRC}
 
-
+#VALGRIND?=/mnt/software/v/valgrind/3.10.1/bin/valgrind --leak-check=full
 BUILDMSG = "=== Building $@ ==="
 
 ${GTEST_OBJECTS}: CXXFLAGS+=${GTEST_CXXFLAGS}
@@ -98,7 +98,7 @@ xml:
 	mkdir xml
 
 %-gtestrun: % | xml
-	LD_LIBRARY_PATH=${ldp} PBDAGCON_TEST_DATA_DIR=${THISDIR} ./$< --gtest_output=xml:xml/${<F}.xml
+	LD_LIBRARY_PATH=${ldp} PBDAGCON_TEST_DATA_DIR=${THISDIR} ${VALGRIND} ./$< --gtest_output=xml:xml/${<F}.xml
 test-%:
 	${CXX} -o $@ $^ ${LDFLAGS} ${LDLIBS}
 
