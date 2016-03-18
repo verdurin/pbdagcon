@@ -196,9 +196,9 @@ Alignment normalizeGaps(Alignment& aln, bool push) {
             // pushing target gaps
             if (tNorm[i] == '-') {
                 size_t j = i;
-                while (true) {
-                    char c = tNorm[++j];
-                    if (c != '-' || j > qlen - 1) {
+                while (++j < qlen) {
+                    char c = tNorm[j];
+                    if (c != '-') {
                         if (c == qNorm[i]) {
                             tNorm[i] = c;
                             tNorm[j] = '-';
@@ -211,9 +211,9 @@ Alignment normalizeGaps(Alignment& aln, bool push) {
             // pushing query gaps
             if (qNorm[i] == '-') {
                 size_t j = i;
-                while (true) {
-                    char c = qNorm[++j];
-                    if (c != '-' || j > tlen - 1) {
+                while (++j < qlen) {
+                    char c = qNorm[j];
+                    if (c != '-') {
                         if (c == tNorm[i]) {
                             qNorm[i] = c;
                             qNorm[j] = '-';
