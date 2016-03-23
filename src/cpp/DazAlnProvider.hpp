@@ -1,5 +1,4 @@
-#ifndef __GCON_DAZ_ALN_PROVIDER__
-#define __GCON_DAZ_ALN_PROVIDER__
+#pragma once
 
 #include <stdio.h>
 #include <string>
@@ -183,5 +182,3 @@ float invertedSum(float x, unsigned int y);
 /// should update the alignment graph to process the dazzler alignment
 /// directly, but this will be useful for debugging purposes.
 void decodeAlignment(Alignment* src, dagcon::Alignment& dest);
-
-#endif //__GCON_DAZ_ALN_PROVIDER__

@@ -1,5 +1,4 @@
-#ifndef __GCON_ALN_PROVIDER__
-#define __GCON_ALN_PROVIDER__
+#pragma once
 
 #include <exception>
 
@@ -45,5 +44,3 @@ public:
 
     virtual ~AlnProvider() {};
 };
-
-#endif //__GCON_ALN_PROVIDER__

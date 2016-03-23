@@ -1,5 +1,4 @@
-#ifndef __GCON_BLASRM5_ALN_PROVIDER__
-#define __GCON_BLASRM5_ALN_PROVIDER__
+#pragma once
 
 #include "AlnProvider.hpp"
 
@@ -67,5 +66,3 @@ private:
     std::ifstream fs_;
     std::istream* is_;
 };
-
-#endif //__GCON_BLASRM5_ALN_PROVIDER__

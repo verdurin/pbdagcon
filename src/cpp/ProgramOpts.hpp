@@ -1,5 +1,4 @@
-#ifndef __GCON_PROGRAMOPTS__
-#define __GCON_PROGRAMOPTS__
+#pragma once
 
 #include <string>
 #include <set>
@@ -35,5 +34,3 @@ struct ProgramOpts {
     /// Limit correction to these targets
     std::set<int> targets;
 };
-
-#endif // __GCON_PROGRAMOPTS__

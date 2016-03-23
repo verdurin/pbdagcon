@@ -1,5 +1,4 @@
-#ifndef __GCON_ALIGNMENT_HPP__
-#define __GCON_ALIGNMENT_HPP__
+#pragma once
 
 #include <stdint.h>
 
@@ -72,5 +71,3 @@ dagcon::Alignment normalizeGaps(dagcon::Alignment& aln, bool push=true);
 void trimAln(dagcon::Alignment& aln, int trimLen=50);
 
 std::string revComp(std::string& seq);
-
-#endif // __GCON_ALIGNMENT_HPP__

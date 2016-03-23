@@ -1,5 +1,4 @@
-#ifndef __GCON_BOUNDEDBUFFER__
-#define __GCON_BOUNDEDBUFFER__
+#pragma once
 
 #include <deque>
 #include <condition_variable>
@@ -49,6 +48,3 @@ private:
     std::condition_variable not_empty_;
     std::condition_variable not_full_;
 };
-
-#endif // __GCON_BOUNDEDBUFFER__
-

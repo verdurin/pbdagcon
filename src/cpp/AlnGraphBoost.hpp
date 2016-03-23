@@ -1,5 +1,4 @@
-#ifndef __GCON_ALNGRAPHBOOST_HPP__
-#define __GCON_ALNGRAPHBOOST_HPP__
+#pragma once
 
 /// Alignment graph representation and consensus caller.  Based on the original
 /// Python implementation, pbdagcon.  This class is modelled after its
@@ -142,5 +141,3 @@ private:
     std::map<VtxDesc, VtxDesc> _bbMap;
     std::vector<VtxDesc> _reaperBag;
 };
-
-#endif // __GCON_ALNGRAPHBOOST_HPP__

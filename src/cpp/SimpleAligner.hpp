@@ -1,5 +1,5 @@
-#ifndef __GCON_SIMPLE_ALIGNER__
-#define __GCON_SIMPLE_ALIGNER__
+#pragma once
+
 #include "Types.h"
 #include "Enumerations.h"
 #include "DNASequence.hpp"
@@ -33,5 +33,3 @@ private:
     TupleMetrics tupleMetrics_;
     DistanceMatrixScoreFunction<DNASequence, FASTQSequence> distScoreFn_;
 };
-
-#endif // __GCON_SIMPLE_ALIGNER__
