@@ -9,7 +9,7 @@
 #include "Alignment.hpp"
 
 ///
-/// Templated, thread-safe buffer container, uses uses boost::circular buffer
+/// Templated, thread-safe buffer container, uses boost::circular buffer
 /// bounded by a given capacity specified by the caller.  When the buffer is
 /// full, the push waits for an open spot.  When the buffer is empty, the pop
 /// waits for an item to be present.  Condition variables are used to signal
@@ -42,7 +42,7 @@ public:
     }
 
 private:
-    size_t max_;
+    size_t const max_;
     buffer_type buffer_;
     std::mutex mutex_;
     std::condition_variable not_empty_;
