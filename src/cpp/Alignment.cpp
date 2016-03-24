@@ -135,10 +135,18 @@ Alignment normalizeGaps(Alignment& aln, bool push) {
     std::string qNorm, tNorm;
     qNorm.reserve(len+100);
     tNorm.reserve(len+100);
+    std::string qstr = aln.qstr;
+    std::string tstr = aln.tstr;
+
+    // convert dots to dashes
+    for (size_t i=0; i < len; i++) {
+        if ('.' == qstr[i]) qstr[i] = '-';
+        if ('.' == tstr[i]) tstr[i] = '-';
+    }
 
     // convert mismatches to indels
     for (size_t i=0; i < len; i++) {
-        char qb = aln.qstr[i], tb = aln.tstr[i];
+        char qb = qstr[i], tb = tstr[i];
         if (qb != tb && qb != '-' && tb != '-') {
             qNorm += '-';
             qNorm += qb;
