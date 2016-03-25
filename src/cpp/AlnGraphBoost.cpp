@@ -17,7 +17,7 @@ AlnGraphBoost::AlnGraphBoost(const std::string& backbone) {
     // initialize the graph structure with the backbone length + enter/exit
     // vertex
     size_t blen = backbone.length();
-    _g = G(blen+1);
+    _g = G(blen+2);
     for (size_t i = 0; i < blen+1; i++)
         boost::add_edge(i, i+1, _g);
 
@@ -39,7 +39,7 @@ AlnGraphBoost::AlnGraphBoost(const std::string& backbone) {
 }
 
 AlnGraphBoost::AlnGraphBoost(const size_t blen) {
-    _g = G(blen+1);
+    _g = G(blen+2);
     for (size_t i = 0; i < blen+1; i++)
         boost::add_edge(i, i+1, _g);
 
@@ -48,7 +48,7 @@ AlnGraphBoost::AlnGraphBoost(const size_t blen) {
     _enterVtx = *curr++;
     _g[_enterVtx].base = '^';
     _g[_enterVtx].backbone = true;
-    for (size_t i = 0; i < blen; i++, ++curr) {
+    for (size_t i = 0; i < blen; ++i, ++curr) {
         VtxDesc v = *curr;
         _g[v].backbone = true;
         _g[v].weight = 1;
@@ -68,6 +68,8 @@ void AlnGraphBoost::addAln(dagcon::Alignment& aln) {
     VtxDesc prevVtx = _enterVtx;
     for (size_t i = 0; i < aln.qstr.length(); i++) {
         char queryBase = aln.qstr[i], targetBase = aln.tstr[i];
+        assert(queryBase != '.');
+        assert(targetBase != '.');
         VtxDesc currVtx = index[bbPos];
         // match
         if (queryBase == targetBase) {
