@@ -42,4 +42,4 @@ cpp-clean:
 
 clean-all: cpp-clean submodule-clean
 	${RM}r src/cpp/third-party/boost_1_58_0-headersonly
-	${RM}r test/cpp/gtest-1.7.0
+	${RM}r test/cpp/googletest-release-1.7.0
