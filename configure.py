@@ -45,7 +45,7 @@ def cd(nwd):
 
 def fetch_gtest(build_dir):
     gtest_version = 'gtest-1.7.0'
-    gtest_uri = 'https://googletest.googlecode.com/files/%s.zip' %gtest_version
+    gtest_uri = 'https://dl.dropboxusercontent.com/u/174258/%s.zip' %gtest_version
     gdir = os.path.join(build_dir, 'test', 'cpp', gtest_version)
     if not os.path.isdir(gdir):
         #mkdirs(gdir)
