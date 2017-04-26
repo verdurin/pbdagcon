@@ -1,21 +1,13 @@
 #!/bin/bash -e
 rm -rf prebuilt deployment
-mkdir -p prebuilt
-PBBAM=`/bin/ls -t tarballs/pbbam*-x86_64.tgz|head -1`
-curl -s -L http://nexus/repository/maven-snapshots/pacbio/sat/htslib/htslib-1.1-SNAPSHOT.tgz -o tarballs/htslib-1.1-SNAPSHOT.tgz
-HTSLIB=`/bin/ls -t tarballs/htslib-*.tgz|head -1`
-BLASR=`/bin/ls -t tarballs/blasr-*tgz|head -1`
-BLASR_LIBCPP=`/bin/ls -t tarballs/blasr_libcpp*tgz|head -1`
-HAVE_HTSLIB=$PWD/prebuilts/`basename $HTSLIB .tgz`
-HAVE_BLASR_LIBCPP=$PWD/prebuilts/`basename $BLASR_LIBCPP .tgz`
-HAVE_PBBAM=$PWD/prebuilts/`basename $PBBAM -x86_64.tgz`
-mkdir -p \
-         $HAVE_HTSLIB \
-         $HAVE_BLASR_LIBCPP \
-         $HAVE_PBBAM
-tar zxf $HTSLIB -C $HAVE_HTSLIB
-tar zxf $PBBAM -C prebuilts
-tar zxf $BLASR_LIBCPP -C $HAVE_BLASR_LIBCPP
+mkdir -p prebuilts/libbzip2-1.0.6
+curl -sL http://ossnexus/repository/unsupported/pitchfork/gcc-4.9.2/libbzip2-1.0.6.tgz \
+| tar zxf - -C prebuilts/libbzip2-1.0.6
+if [ ! -e .distfiles/gtest/release-1.7.0.tar.gz ]; then
+  mkdir -p .distfiles/gtest
+  curl -sL http://ossnexus/repository/unsupported/distfiles/googletest/release-1.7.0.tar.gz \
+    -o .distfiles/gtest/release-1.7.0.tar.gz
+fi
 
 type module >& /dev/null || \
 . /mnt/software/Modules/current/init/bash
