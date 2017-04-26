@@ -30,6 +30,7 @@ HAVE_NCURSES      = /mnt/software/n/ncurses/5.9
 HAVE_HDF5         = /mnt/software/a/anaconda2/4.2.0
 HAVE_OPENBLAS     = /mnt/software/o/openblas/0.2.14
 HAVE_CMAKE        = /mnt/software/c/cmake/3.2.2/bin/cmake
+HAVE_LIBBZIP2     = $PWD/prebuilts/libbzip2-1.0.6
 #
 pbdagcon_REPO     = $PWD/repos/pbdagcon
 pbbam_REPO        = $PWD/repos/pbbam
