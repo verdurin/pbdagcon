@@ -35,7 +35,7 @@ blasr_libcpp_REPO = $PWD/repos/blasr_libcpp
 PREFIX            = $PWD/deployment
 EOF
 echo y | make -C pitchfork _startover
-make -C pitchfork pbdagcon
+make -j8 -C pitchfork pbdagcon
 
 source deployment/setup-env.sh
 myVERSION=`pbdagcon --version|awk '/version/{print $3}'`
