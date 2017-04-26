@@ -36,11 +36,10 @@ HAVE_HDF5         = /mnt/software/a/anaconda2/4.2.0
 HAVE_OPENBLAS     = /mnt/software/o/openblas/0.2.14
 HAVE_CMAKE        = /mnt/software/c/cmake/3.2.2/bin/cmake
 #
-HAVE_PBBAM        = $HAVE_PBBAM
-HAVE_HTSLIB       = $HAVE_HTSLIB
-HAVE_BLASR_LIBCPP = $HAVE_BLASR_LIBCPP
-#
 pbdagcon_REPO     = $PWD/repos/pbdagcon
+pbbam_REPO        = $PWD/repos/pbbam
+htslib_REPO       = $PWD/repos/htslib
+blasr_libcpp_REPO = $PWD/repos/blasr_libcpp
 PREFIX            = $PWD/deployment
 EOF
 echo y | make -C pitchfork _startover
