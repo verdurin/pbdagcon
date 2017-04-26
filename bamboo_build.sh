@@ -16,6 +16,9 @@ module load gcc/4.9.2
 module load ccache/3.2.3
 
 cat > pitchfork/settings.mk << EOF
+CCACHE_BASEDIR=$PWD/pitchfork
+CCACHE_DIR=/mnt/secondary/Share/tmp/bamboo.mobs.ccachedir
+export CCACHE_BASEDIR CCACHE_DIR
 # from Herb
 HAVE_OPENSSL      = /mnt/software/o/openssl/1.0.2a
 HAVE_PYTHON       = /mnt/software/p/python/2.7.9/bin/python
