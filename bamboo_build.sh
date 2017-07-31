@@ -14,6 +14,7 @@ type module >& /dev/null || \
 module load git/2.8.3
 module load gcc/4.9.2
 module load ccache/3.2.3
+module load htslib
 
 cat > pitchfork/settings.mk << EOF
 CCACHE_BASEDIR=$PWD/pitchfork
