@@ -153,7 +153,7 @@ def compose_defines_pacbio(envin):
             'HDF5_INCLUDE', 'HDF5_LIB', 'HDF5_LIBFLAGS',
             'PBBAM_INCLUDE', 'PBBAM_LIB', 'PBBAM_LIBFLAGS',
             'HTSLIB_INCLUDE', 'HTSLIB_LIB', 'HTSLIB_LIBFLAGS',
-            'BOOST_INCLUDE','PTHREAD_LIBFLAGS',
+            'BOOST_INCLUDE', 'PTHREAD_LIBFLAGS',
             'ZLIB_LIB', 'ZLIB_LIBFLAGS',
             'GCC_LIB',
             'DAZZ_DB_SRC', 'DAZZ_DB_INCLUDE',
