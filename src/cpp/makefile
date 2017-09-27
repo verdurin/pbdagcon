@@ -8,7 +8,7 @@ PBDAGCON_OBJECTS := BlasrM5AlnProvider.o main.o SimpleAligner.o
 DAZCON_OBJECTS := DB.o QV.o align.o DazAlnProvider.o dazcon.o
 
 CPPFLAGS += -MMD -MP
-CXXFLAGS = -O3 -std=c++11 -Wall -Wuninitialized -pedantic
+CXXFLAGS = -O3 -std=c++14 -Wall -Wuninitialized -pedantic
 CFLAGS = -O3 -Wall -Wextra -fno-strict-aliasing
 
 INCDIRS := \
