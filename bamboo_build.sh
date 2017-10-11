@@ -1,48 +1,72 @@
 #!/bin/bash -e
-rm -rf prebuilt deployment
-mkdir -p prebuilts/libbzip2-1.0.6
-curl -sL http://ossnexus/repository/unsupported/pitchfork/gcc-4.9.2/libbzip2-1.0.6.tgz \
-| tar zxf - -C prebuilts/libbzip2-1.0.6
+NEXUS_BASEURL=http://ossnexus.pacificbiosciences.com/repository
+#NEXUS_URL=$NEXUS_BASEURL/unsupported/gcc-4.9.2
 if [ ! -e .distfiles/gtest/release-1.7.0.tar.gz ]; then
   mkdir -p .distfiles/gtest
-  curl -sL http://ossnexus/repository/unsupported/distfiles/googletest/release-1.7.0.tar.gz \
+  curl -sL $NEXUS_BASEURL/unsupported/distfiles/googletest/release-1.7.0.tar.gz \
     -o .distfiles/gtest/release-1.7.0.tar.gz
 fi
+tar zxf .distfiles/gtest/release-1.7.0.tar.gz -C repos/
+ln -sfn googletest-release-1.7.0 repos/gtest
 
-type module >& /dev/null || \
-. /mnt/software/Modules/current/init/bash
+rm -rf deployment
+mkdir -p deployment
+#curl -s -L $NEXUS_URL/DAZZ_DB-SNAPSHOT.tgz|tar zx -C deployment
+BLASR=tarballs/blasr.tgz
+BLASR_LIBCPP=tarballs/blasr_libcpp.tgz
+PBBAM=tarballs/pbbam.tgz
+tar zxf $BLASR_LIBCPP -C deployment
+tar zxf $BLASR        -C deployment
+tar zxf $PBBAM        -C deployment
+
+export PATH=$PWD/deployment/bin:$PATH
+export LD_LIBRARY_PATH=$PWD/deployment/lib:$LD_LIBRARY_PATH
+
+type module >& /dev/null || . /mnt/software/Modules/current/init/bash
 module load git/2.8.3
-module load gcc/4.9.2
+module load gcc/6.4.0
 module load ccache/3.2.3
+export CCACHE_DIR=/mnt/secondary/Share/tmp/bamboo.mobs.ccachedir
+module load boost/1.60
+if [[ $BOOST_ROOT =~ /include ]]; then
+  set -x
+  BOOST_ROOT=$(dirname $BOOST_ROOT)
+  set +x
+fi
+module load htslib/1.3.1
+module load hdf5-tools/1.8.19
+module load zlib/1.2.8
 
-cat > pitchfork/settings.mk << EOF
-CCACHE_BASEDIR=$PWD/pitchfork
-CCACHE_DIR=/mnt/secondary/Share/tmp/bamboo.mobs.ccachedir
-export CCACHE_BASEDIR CCACHE_DIR
-# from Herb
-HAVE_OPENSSL      = /mnt/software/o/openssl/1.0.2a
-HAVE_PYTHON       = /mnt/software/p/python/2.7.9/bin/python
-HAVE_BOOST        = /mnt/software/b/boost/1.58.0
-HAVE_ZLIB         = /mnt/software/z/zlib/1.2.8
-HAVE_SAMTOOLS     = /mnt/software/s/samtools/1.3.1mobs
-HAVE_NCURSES      = /mnt/software/n/ncurses/5.9
-# from MJ
-HAVE_HDF5         = /mnt/software/a/anaconda2/4.2.0
-HAVE_OPENBLAS     = /mnt/software/o/openblas/0.2.14
-HAVE_CMAKE        = /mnt/software/c/cmake/3.2.2/bin/cmake
-HAVE_LIBBZIP2     = $PWD/prebuilts/libbzip2-1.0.6
-#
-pbdagcon_REPO     = $PWD/repos/pbdagcon
-pbbam_REPO        = $PWD/repos/pbbam
-htslib_REPO       = $PWD/repos/htslib
-blasr_libcpp_REPO = $PWD/repos/blasr_libcpp
-PREFIX            = $PWD/deployment
-EOF
-echo y | make -C pitchfork _startover
-make -j8 -C pitchfork pbdagcon
+cd repos/pbdagcon
+export CCACHE_BASEDIR=$PWD
+rm -f defines.mk
+set -x
+mkdir build
+    BOOST_INCLUDE=$BOOST_ROOT/include \
+LIBPBDATA_INCLUDE=$PWD/../../deployment/include/pbdata \
+    LIBPBDATA_LIB=$PWD/../../deployment/lib \
+ LIBBLASR_INCLUDE=$PWD/../../deployment/include/alignment \
+     LIBBLASR_LIB=$PWD/../../deployment/lib \
+LIBPBIHDF_INCLUDE=$PWD/../../deployment/include/hdf \
+    LIBPBIHDF_LIB=$PWD/../../deployment/lib \
+    PBBAM_INCLUDE=$PWD/../../deployment/include \
+        PBBAM_LIB=$PWD/../../deployment/lib \
+   HTSLIB_INCLUDE=$(pkg-config --cflags-only-I htslib|awk '{print $1}'|sed -e 's/^-I//') \
+       HTSLIB_LIB=$(pkg-config --libs-only-L htslib|awk '{print $1}'|sed -e 's/^-L//') \
+     HDF5_INCLUDE=$(pkg-config --cflags-only-I hdf5|awk '{print $1}'|sed -e 's/^-I//') \
+         HDF5_LIB=$(pkg-config --libs-only-L hdf5|awk '{print $1}'|sed -e 's/^-L//') \
+     DALIGNER_SRC=$PWD/../daligner \
+      DAZZ_DB_SRC=$PWD/../dazzdb \
+        GTEST_SRC=$PWD/../gtest/src \
+    GTEST_INCLUDE=$PWD/../gtest/include \
+    ZLIB_LIBFLAGS="$(pkg-config --libs zlib)" \
+./configure.py --build-dir=$PWD/build
+make -C build
+cp -a build/src/cpp/pbdagcon ../../deployment/bin/
+cp -a build/src/cpp/dazcon   ../../deployment/bin/
+cd ../..
 
-source deployment/setup-env.sh
 myVERSION=`pbdagcon --version|awk '/version/{print $3}'`
 rm -rf tarballs && mkdir -p tarballs
 cd deployment
-tar zcf ../tarballs/pbdagcon-${myVERSION}.tgz $(grep -v '^#' var/pkg/pbdagcon)
+tar zcf ../tarballs/pbdagcon-${myVERSION}.tgz bin/pbdagcon bin/dazcon

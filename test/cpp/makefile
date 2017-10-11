@@ -50,7 +50,7 @@ LDFLAGS+=$(patsubst %,-L %,${LIBDIRS})
 GTEST_CPPFLAGS += -isystem $(GTEST_INCLUDE) -isystem ${GTEST_SRC}/..
 GTEST_CXXFLAGS += -g -Wall -Wextra -pthread
 
-CXXFLAGS := -O3 -std=c++11
+CXXFLAGS := -O3 -std=c++14
 
 GTEST_OBJECTS := gtest-all.o gtest_main.o
 DAZCON_OBJECTS := DB.o QV.o align.o Alignment.o \
