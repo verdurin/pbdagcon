@@ -23,19 +23,19 @@ export PATH=$PWD/deployment/bin:$PATH
 export LD_LIBRARY_PATH=$PWD/deployment/lib:$LD_LIBRARY_PATH
 
 type module >& /dev/null || . /mnt/software/Modules/current/init/bash
-module load git/2.8.3
-module load gcc/6.4.0
-module load ccache/3.2.3
+module load git
+module load gcc
+module load ccache
 export CCACHE_DIR=/mnt/secondary/Share/tmp/bamboo.mobs.ccachedir
-module load boost/1.60
+module load boost
 if [[ $BOOST_ROOT =~ /include ]]; then
   set -x
   BOOST_ROOT=$(dirname $BOOST_ROOT)
   set +x
 fi
-module load htslib/1.3.1
-module load hdf5-tools/1.8.19
-module load zlib/1.2.8
+module load htslib
+module load hdf5-tools
+module load zlib
 
 cd repos/pbdagcon
 export CCACHE_BASEDIR=$PWD
@@ -51,7 +51,7 @@ LIBPBIHDF_INCLUDE=$PWD/../../deployment/include/hdf \
     LIBPBIHDF_LIB=$PWD/../../deployment/lib \
     PBBAM_INCLUDE=$PWD/../../deployment/include \
         PBBAM_LIB=$PWD/../../deployment/lib \
-   HTSLIB_INCLUDE=$(pkg-config --cflags-only-I htslib|awk '{print $1}'|sed -e 's/^-I//') \
+   HTSLIB_INCLUDE=$(pkg-config --cflags-only-I htslib|sed -e 's/-I//g') \
        HTSLIB_LIB=$(pkg-config --libs-only-L htslib|awk '{print $1}'|sed -e 's/^-L//') \
      HDF5_INCLUDE=$(pkg-config --cflags-only-I hdf5|awk '{print $1}'|sed -e 's/^-I//') \
          HDF5_LIB=$(pkg-config --libs-only-L hdf5|awk '{print $1}'|sed -e 's/^-L//') \
