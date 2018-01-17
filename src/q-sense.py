@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+from __future__ import print_function
 import sys
 import os
 import logging
@@ -85,8 +86,8 @@ class Consensus(PBMultiToolRunner):
             prefix = ".".join(prefix)
         full_prefix = os.path.join(self.args.out_dir_name, prefix)
         with open("%s_ref.fa" % full_prefix, "w") as f:
-            print >>f ,">%s_ref" % self.args.consensus_seq_name
-            print >>f, s
+            print(">%s_ref" % self.args.consensus_seq_name, file=f)
+            print(s, file=f)
         hp_corr = True if self.args.enable_hp_corr else False
         mark_lower_case = True if self.args.mark_lower_case else False
         generate_consensus(input_fasta_name, "%s_ref.fa" % full_prefix, full_prefix, self.args.consensus_seq_name, 

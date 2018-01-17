@@ -2,6 +2,7 @@
 """Super-simple converter from blasr m4 alignments to pbdagcon 'pre'
 alignments. For use in the pre-assembler dagcon workflow.
 """
+from __future__ import print_function
 
 import sys
 import heapq
@@ -201,8 +202,8 @@ def main(): # pylint: disable=R0914
         else:
             tseq = seqs[rec.tname].translate(__rc__)[::-1][tst:tnd]
 
-        print ' '.join([rec.qname, rec.tname, strand,
-                       rec.tseqlength, str(tst), str(tnd), qseq, tseq])
+        print(' '.join([rec.qname, rec.tname, strand,
+                       rec.tseqlength, str(tst), str(tnd), qseq, tseq]))
 
 if __name__ == '__main__':
     sys.exit(main())
