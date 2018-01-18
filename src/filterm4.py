@@ -3,6 +3,7 @@
 # Filters for unique, highest scoring subread query/target pairs from an m4
 # file. Helps get rid of chimeras, at the cost of some yield.
 
+from __future__ import print_function
 import sys
 from collections import namedtuple
 
@@ -36,7 +37,7 @@ def printUniq(qgroup, count):
 
     for r in top.values():
         count.filt += 1
-        print r,
+        print(r, end=' ')
 
     qgroup[:] = []
 
