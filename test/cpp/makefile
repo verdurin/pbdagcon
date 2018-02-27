@@ -15,7 +15,6 @@ INCDIRS := . \
 	${LIBPBIHDF_INCLUDE} \
 	${PBBAM_INCLUDE} \
 	${HDF5_INCLUDE} \
-	${HTSLIB_INCLUDE} \
 	${BOOST_INCLUDE} \
 	${GTEST_INCLUDE} \
 	third-party
@@ -26,7 +25,6 @@ LIBDIRS := \
 	${LIBPBIHDF_LIB} \
 	${PBBAM_LIB} \
 	${HDF5_LIB} \
-	${HTSLIB_LIB} \
 	${GCC_LIB} \
 	${ZLIB_LIB}
 
@@ -37,11 +35,11 @@ LDLIBS+= \
 	${LIBPBIHDF_LIBFLAGS} \
 	${PBBAM_LIBFLAGS} \
 	${HDF5_LIBFLAGS} \
-	${HTSLIB_LIBFLAGS} \
+	${HTSLIB_LIBS} \
 	${ZLIB_LIBFLAGS} \
 	${PTHREAD_LIBFLAGS} \
 	${DL_LIBFLAGS}
-CPPFLAGS+=$(patsubst %,-I%,${INCDIRS})
+CPPFLAGS+=$(patsubst %,-I%,${INCDIRS}) $(HTSLIB_CFLAGS)
 LDFLAGS+=$(patsubst %,-L %,${LIBDIRS})
 
 # For fused-src, gtest-all.cc includes gtest/*.
