@@ -1,6 +1,6 @@
 #!/bin/bash
 export PATH=$PWD/deployment/bin:$PATH
-export LD_LIBRARY_PATH=$PWD/deployment/bin:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=$PWD/deployment/lib:$LD_LIBRARY_PATH
 type module >& /dev/null \
 || . /mnt/software/Modules/current/init/bash
 module load gcc
