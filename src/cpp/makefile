@@ -18,8 +18,7 @@ INCDIRS := \
 	${LIBPBDATA_INCLUDE} \
 	${LIBPBIHDF_INCLUDE} \
 	${PBBAM_INCLUDE} \
-	${HDF5_INCLUDE} \
-	${HTSLIB_INCLUDE}
+	${HDF5_INCLUDE}
 SYS_INCDIRS := \
 	${BOOST_INCLUDE} \
 	${THISDIR}/third-party
@@ -29,7 +28,6 @@ LIBDIRS := \
 	${LIBPBIHDF_LIB} \
 	${PBBAM_LIB} \
 	${HDF5_LIB} \
-	${HTSLIB_LIB} \
 	${GCC_LIB} \
 	${ZLIB_LIB}
 LDLIBS+= \
@@ -38,11 +36,11 @@ LDLIBS+= \
 	${LIBPBIHDF_LIBFLAGS} \
 	${PBBAM_LIBFLAGS} \
 	${HDF5_LIBFLAGS} \
-	${HTSLIB_LIBFLAGS} \
+	${HTSLIB_LIBS} \
 	${ZLIB_LIBFLAGS} \
 	${PTHREAD_LIBFLAGS} \
 	${DL_LIBFLAGS}
-CPPFLAGS+=$(patsubst %,-I%,${INCDIRS}) $(patsubst %,-isystem%,${SYS_INCDIRS})
+CPPFLAGS+=$(patsubst %,-I%,${INCDIRS}) $(patsubst %,-isystem%,${SYS_INCDIRS}) $(HTSLIB_CFLAGS)
 LDFLAGS+=$(patsubst %,-L %,${LIBDIRS})
 LDFLAGS += ${EXTRA_LDFLAGS}
 

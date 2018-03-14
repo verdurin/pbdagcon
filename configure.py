@@ -152,7 +152,7 @@ def compose_defines_pacbio(envin):
             'LIBPBIHDF_INCLUDE', 'LIBPBIHDF_LIB', 'LIBPBIHDF_LIBFLAGS',
             'HDF5_INCLUDE', 'HDF5_LIB', 'HDF5_LIBFLAGS',
             'PBBAM_INCLUDE', 'PBBAM_LIB', 'PBBAM_LIBFLAGS',
-            'HTSLIB_INCLUDE', 'HTSLIB_LIB', 'HTSLIB_LIBFLAGS',
+            'HTSLIB_CFLAGS', 'HTSLIB_LIBS',
             'BOOST_INCLUDE', 'PTHREAD_LIBFLAGS',
             'ZLIB_LIB', 'ZLIB_LIBFLAGS',
             'GCC_LIB',
@@ -244,7 +244,7 @@ def set_defs_defaults(env, nopbbam):
     pbbam_defaults = {
         'LIBPBIHDF_LIBFLAGS': '-lpbihdf',
         'PBBAM_LIBFLAGS': '-lpbbam',
-        'HTSLIB_LIBFLAGS': '-lhts',
+        'HTSLIB_LIBS': '-lhts',
         'HDF5_LIBFLAGS': '-lhdf5_cpp -lhdf5',
         'ZLIB_LIBFLAGS': '-lz',
         'PTHREAD_LIBFLAGS': '-lpthread',
