@@ -31,6 +31,8 @@ LIBDIRS := \
 	${GCC_LIB} \
 	${ZLIB_LIB}
 LDLIBS+= \
+# On CentOS 6.x, this fails to compile unless -lrt is added to the link flags
+# cf. https://github.com/PacificBiosciences/blasr/issues/88
 	${LIBBLASR_LIBFLAGS} \
 	${LIBPBDATA_LIBFLAGS} \
 	${LIBPBIHDF_LIBFLAGS} \
